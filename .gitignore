@@ -1,3 +1,13 @@
 src/brex/config.py
 **.pyc
 **/__pycache__
+
+# emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
