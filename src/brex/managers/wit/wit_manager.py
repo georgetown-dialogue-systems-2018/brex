@@ -22,8 +22,9 @@ class WitManager(Manager):
         basedir = os.sep.join(['brex', 'managers', 'wit', 'handlers'])
         filenames = [filename
                      for filename in os.listdir(basedir)
-                     if filename not in ['__init__.py', 'handler.py']
-                        and not filename.startswith('_')]
+                     if filename is not 'handler.py'
+                        and not filename.startswith('_')
+                        and not filename.startswith('.')]
 
         for fname in filenames:
             fname = fname[:-3] # strip .py
@@ -32,8 +33,8 @@ class WitManager(Manager):
             fpath = basedir + os.sep + fname
             fpath = fpath.replace(os.sep, '.')
 
+            print(fpath)
             handler_module = importlib.import_module(fpath)
-            print(dir(handler_module))
             handler_class = getattr(handler_module, snake2title(fname))
 
             self._wit_handlers[intent_name] = handler_class()
@@ -61,4 +62,3 @@ class WitManager(Manager):
         logging.debug("Selected handler {}".format(str(handler)))
 
         return handler.handle(self._context, wit_response)
-
