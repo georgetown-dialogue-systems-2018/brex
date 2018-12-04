@@ -1,0 +1,8 @@
+debug = False
+
+# for goodreads
+gr_api_key = ''
+gr_api_secret = ''
+
+# for wit
+wit_access_token = ''
