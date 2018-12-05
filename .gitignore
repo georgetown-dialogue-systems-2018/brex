@@ -1,6 +1,8 @@
+__goodreads_cache__
 src/brex/config.py
 **.pyc
 **/__pycache__
+**syncthing**
 
 # emacs
 *~
