@@ -1,3 +1,4 @@
 Goodreads
 wit
 diskcache
+bs4
