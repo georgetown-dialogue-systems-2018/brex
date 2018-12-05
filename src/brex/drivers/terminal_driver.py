@@ -5,11 +5,9 @@ class TerminalDriver(Driver):
         self._dm = dm_class()
 
     def run(self):
-        exit = False
-        while not exit:
+        should_exit = False
+        while not should_exit:
             user_input = input('=> ').strip()
             response = self._dm.respond(user_input)
-            print("response", response)
-            exit = response['exit']
+            should_exit = response['exit'] if 'exit' in response else should_exit
             print(response['text'])
-
