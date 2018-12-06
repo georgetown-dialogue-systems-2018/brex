@@ -100,11 +100,11 @@ class Inform(Handler):
             raise Exception("""Tried to generate text for the intent 'inform', but didn't
 recognize any system intents.\n\n{}""".format(str(system_intent)))
 
+    # top level function called by the manager
     def handle(self, context, wit_response):
         output = {}
 
         entities = wit_response['entities']
-
         if 'reject' in entities:
             system_intent = self._handle_reject(context, wit_response)
         else:

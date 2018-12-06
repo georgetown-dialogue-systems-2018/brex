@@ -25,7 +25,3 @@ def book(book_id=None, isbn=None):
 @CACHE.memoize(expire=86400)
 def search_books(q, page=1, search_field='all'):
     return CLIENT.search_books(q, page=page, search_field=search_field)
-
-@CACHE.memoize(expire=86400)
-def review(review_id):
-    return CLIENT.review(review_id)
