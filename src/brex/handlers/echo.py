@@ -1,6 +1,6 @@
 import logging
 
-from brex.managers.wit.handlers.handler import Handler
+from brex.handlers.handler import Handler
 from brex.config import debug
 
 class Echo(Handler):

@@ -3,14 +3,13 @@ import importlib
 import logging
 
 from wit import Wit
-
-from brex.managers.manager import Manager
 import brex.config as cfg
+
 
 def snake2title(s):
     return "".join([w.capitalize() for w in s.split('_')])
 
-class WitManager(Manager):
+class WitManager(object):
     def __init__(self):
         # Wit is a wrapper for the wit.ai HTTP API
         self._wit_client = Wit(cfg.wit_access_token)
@@ -41,7 +40,7 @@ class WitManager(Manager):
         "Load (almost) all Python classes in the 'handlers/' directory and instantiate"
         self._handlers = {}
 
-        basedir = os.sep.join(['brex', 'managers', 'wit', 'handlers'])
+        basedir = os.sep.join(['brex', 'handlers'])
         filenames = [filename
                      for filename in os.listdir(basedir)
                      if filename is not 'handler.py'

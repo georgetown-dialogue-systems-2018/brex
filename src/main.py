@@ -1,7 +1,7 @@
 import logging
 
 from brex.drivers.terminal_driver import TerminalDriver
-from brex.managers.wit.wit_manager import WitManager
+from brex.wit_manager import WitManager
 import brex.config as cfg
 
 def main():

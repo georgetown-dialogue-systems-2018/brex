@@ -1,4 +1,4 @@
-from brex.managers.wit.handlers.handler import Handler
+from brex.handlers.handler import Handler
 
 class Bye(Handler):
     def __init__(self):
