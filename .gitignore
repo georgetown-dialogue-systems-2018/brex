@@ -13,3 +13,7 @@ src/brex/config.py
 auto-save-list
 tramp
 .\#*
+
+# other
+**.DS_Store
+**.mypy**
