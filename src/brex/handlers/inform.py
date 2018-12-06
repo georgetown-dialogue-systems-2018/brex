@@ -28,23 +28,27 @@ class Inform(Handler):
         self._latest_search_params = (author_name, 1, 'author')
 
         if books:
+            logging.debug('Found books for author "{}": {}'.format(author_name, str(books)))
             return {'books': books}
         else:
+            logging.debug('Failed to find any books for author "{}"'.format(author_name))
             return {'failure': 'none_found_by_author'}
 
     def _generate_books(self, context, wit_response):
         for name, vals in wit_response['entities'].items():
             # choose the first one
             if name in generating_entities:
+                logging.debug('Generating intents based on slot "{}"'.format(name))
                 return (self._generate_by_author(context, vals) if name == 'author' else
                         None if name == 'author_like' else
                         None)
-        return {'failure': 'no_generating_slot'}
+        logging.debug('Tried to generate books, but not generating entities were detected.')
+        logging.debug('Attempting to suggest one from the list, if present')
+        return self._handle_reject(context, wit_response, called_from_generate=True)
 
     # filtering functions
     def _filter_books(self, context, wit_response, books):
         return {'books': [book for book in books if book not in self._already_recommended]}
-
 
     # handling functions
     def _select_book(self, context, wit_response, books):
@@ -56,9 +60,11 @@ class Inform(Handler):
 
         # let other handlers know
         context['current_book'] = book
-        return {'book': books[0]}
+        logging.debug('Recommending book "{}". {} books remain'
+                      .format(book, len(self._latest_books)))
+        return {'book': book}
 
-    def _handle_reject(self, context, wit_response):
+    def _handle_reject(self, context, wit_response, called_from_generate=False):
         if len(self._latest_books) > 0:
             return self._select_book(context, wit_response, self._latest_books)
         else:
@@ -68,8 +74,10 @@ class Inform(Handler):
 
             if books:
                 return self.select_book(context, wit_response, books)
-            else:
+            elif not called_from_generate:
                 return {'failure': 'book_list_exhausted'}
+            else:
+                return {'failure': 'no_generating_entities'}
 
     def _handle_query(self, context, wit_response):
         books_query = self._generate_books(context, wit_response)
@@ -85,7 +93,7 @@ class Inform(Handler):
     # text generation functions
     def _generate_text(self, context, wit_response, system_intent):
         if 'failure' in system_intent:
-            return 'womp womp'
+            return system_intent['failure']
         elif 'book' in system_intent:
             return 'Have you read "{}"?'.format(system_intent['book'])
         else:
