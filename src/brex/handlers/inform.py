@@ -11,7 +11,7 @@ import brex.goodreads as gr
 # def review(review_id):
 
 filtering_entities = ['']
-generating_entities = ['author', 'author_like', 'title_like']
+generating_entities = ['author', 'author_like', 'title_like', 'genre']
 
 class Inform(Handler):
     def __init__(self):
@@ -34,17 +34,44 @@ class Inform(Handler):
             logging.debug('Failed to find any books for author "{}"'.format(author_name))
             return {'failure': 'none_found_by_author'}
 
+    def _generate_by_genre(self, context, genre):
+
+        # just take the most likely one for now
+        genre_name = genre[0]['value']
+        books = gr.search_books(genre_name, page=1, search_field='genre')
+        self._latest_search_params = (genre_name, 1, 'genre')
+
+        if books:
+            logging.debug('Found books for genre "{}": {}'.format(genre_name, str(books)))
+            return {'books': books}
+        else:
+            logging.debug('Failed to find any books for genre "{}"'.format(genre_name))
+            return {'failure': 'none_found_by_genre'}
+
     def _generate_books(self, context, wit_response):
         for name, vals in wit_response['entities'].items():
             # choose the first one
             if name in generating_entities:
                 logging.debug('Generating intents based on slot "{}"'.format(name))
-                return (self._generate_by_author(context, vals) if name == 'author' else
-                        None if name == 'author_like' else
-                        None)
+                if name == "author":
+                    return self._generate_by_author(context, vals)
+                elif name == "author_like":
+                    return None
+                elif name == "genre":
+                    return self._generate_by_genre(context, vals)
+                else:
+                    return None
+
+
+                    #return(self._generate_by_author(context, vals) if name == 'author' else
+                    #None if name == 'author_like' else
+                    #None)
         logging.debug('Tried to generate books, but not generating entities were detected.')
         logging.debug('Attempting to suggest one from the list, if present')
         return self._handle_reject(context, wit_response, called_from_generate=True)
+
+
+
 
     # filtering functions
     def _filter_books(self, context, wit_response, books):
