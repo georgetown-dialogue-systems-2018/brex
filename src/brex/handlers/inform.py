@@ -4,14 +4,8 @@ from brex.handlers.handler import Handler
 import brex.goodreads as gr
 from brex.template_renderer import TemplateRenderer
 
-# def author(author_id):
-# def find_author(author_name):
-# def book(book_id=None, isbn=None):
-# def search_books(q, page=1, search_field='all'):
-# def review(review_id):
-
 filtering_entities = ['']
-generating_entities = ['author', 'author_like', 'title_like', 'genre']
+generating_entities = ['author', 'genre']
 
 class Inform(Handler):
     def __init__(self):
@@ -31,10 +25,12 @@ class Inform(Handler):
 
         if books:
             logging.debug('Found books for author "{}": {}'.format(author_name, str(books)))
-            return {'books': books}
+            return {'books': books,
+                    'author': author_name}
         else:
             logging.debug('Failed to find any books for author "{}"'.format(author_name))
-            return {'failure': 'none_found_by_author'}
+            return {'failure': 'none_found_by_author',
+                    'author': author_name}
 
     def _generate_by_genre(self, context, genre):
 
@@ -45,10 +41,12 @@ class Inform(Handler):
 
         if books:
             logging.debug('Found books for genre "{}": {}'.format(genre_name, str(books)))
-            return {'books': books}
+            return {'books': books,
+                    'genre': genre_name}
         else:
             logging.debug('Failed to find any books for genre "{}"'.format(genre_name))
-            return {'failure': 'none_found_by_genre'}
+            return {'failure': 'none_found_by_genre',
+                    'genre': genre_name}
 
     def _generate_books(self, context, wit_response):
         for name, vals in wit_response['entities'].items():
@@ -57,10 +55,6 @@ class Inform(Handler):
                 logging.debug('Generating intents based on slot "{}"'.format(name))
                 if name == "author":
                     return self._generate_by_author(context, vals)
-                elif name == "author_like":
-                    return None
-                elif name == "title_like":
-                    return None
                 elif name == "genre":
                     return self._generate_by_genre(context, vals)
                 else:
@@ -117,10 +111,10 @@ class Inform(Handler):
     def _generate_failure_response(self, context, wit_response, system_intent):
         reason = system_intent['failure']
         if reason == 'none_found_by_author':
-            author = wit_response['entities']['author'][0]['value']
+            author = system_intent['author']
             return self._renderer.render('none_found_by_author', {'author': author})
         elif reason == 'none_found_by_genre':
-            genre = wit_response['entities']['genre'][0]['value']
+            genre = system_intent['genre']
             return self._renderer.render('none_found_by_genre', {'genre': genre})
         elif reason == 'book_list_exhausted':
             return self._renderer.render('book_list_exhausted')
