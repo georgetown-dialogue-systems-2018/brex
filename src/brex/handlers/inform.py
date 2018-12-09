@@ -115,7 +115,29 @@ class Inform(Handler):
         if 'failure' in system_intent:
             return system_intent['failure']
         elif 'book' in system_intent:
-            return 'Have you read "{}"?'.format(system_intent['book'])
+            # randomize responses
+            response_options = ['Have you read "{}"',
+                                'I have read "{}" last week, and highly recommend it!',
+                                '"{}" is quite nice. My friend has read that one before?',
+                                'I\'m a big fan of"{}". Have you read it before.',
+                                'Let\'s see. I would recommend "{}"?',
+                                'Well then, you should look into "{}"?',
+                                'You should read "{}". Have you read this one before?',
+                                'Let\'s see. How about "{}"?',
+                                'Okay, I would recommend "{}"?',
+                                '"{}" would be a good option. Have you read this one before.',
+                                '"{}" is still on my to-read list, but I would recommend it! I\'ve heard great things from the book club.',
+                                'Based on what a good friend has told me, "{}" is a pretty good read.'
+                                'Have you read this one?',
+                                'hmm, okay, I would recommend "{}". Have you read it before?',
+                                'I would recommend "{}". In fact I read it last year. Have you read it before?',
+                                'Oh, "{}" has been a hit among the other dinosaurs. Have you read it before?',
+                                '"{}" is a real page-turner. Although, it\'s difficult to turn pages with little arms.'
+                                ' Have you read it before?',
+                                ]
+            response = random.choice(response_options)
+
+            return response.format(system_intent['book'])
         else:
             raise Exception("""Tried to generate text for the intent 'inform', but didn't
 recognize any system intents.\n\n{}""".format(str(system_intent)))
