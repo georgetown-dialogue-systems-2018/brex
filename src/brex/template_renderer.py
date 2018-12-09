@@ -7,6 +7,7 @@ import toml
 class TemplateRenderer():
     def __init__(self, filename):
         self._data = toml.load(os.sep.join(['brex', 'templates', filename + '.toml']))
+        print(self._data)
 
     def render(self, kind, keywords={}, strategy="random"):
         keys = kind.split(".")
