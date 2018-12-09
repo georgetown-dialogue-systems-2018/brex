@@ -2,3 +2,4 @@ Goodreads
 wit
 diskcache
 bs4
+toml

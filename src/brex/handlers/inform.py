@@ -2,7 +2,7 @@ import logging
 
 from brex.handlers.handler import Handler
 import brex.goodreads as gr
-from brex.choice import Choice
+from brex.template_renderer import TemplateRenderer
 
 # def author(author_id):
 # def find_author(author_name):
@@ -19,43 +19,7 @@ class Inform(Handler):
         self._latest_books = None
         self._latest_search_params = None
 
-        self._response_templates = {
-            'book': Choice(
-                ['Have you read "{book}"?',
-                 'I read "{book}" last week, and highly recommend it!',
-                 '"{book}" is quite nice. My friend B. Excelsus told me about it last week.',
-                 'I\'m a big fan of "{book}". Have you heard of it before?',
-                 'Let\'s see, have you ever heard of "{book}"?',
-                 'Well then, you have a look at "{book}"!',
-                 'You should read "{book}". Have you read this one before?',
-                 'Let\'s see. How about "{book}"?',
-                 'Okay, I would recommend "{book}".',
-                 '"{book}" would be a good option. Have you read this one before?',
-                 '"{book}" is still on my to-read list, but I would recommend it! I\'ve heard great things from my book club.',
-                 'Based on what a good friend has told me, "{book}" is a pretty good read.'
-                 'Have you read this one?',
-                 'Hmm, alright, I would recommend "{book}". Have you read it before?',
-                 'I think "{book}" would be good for that. In fact, I read it last year. Have you read it before?',
-                 'Oh, "{book}" has been a hit among the other dinosaurs. Have you read it before?',
-                 '"{book}" is a real page-turner, even though it\'s difficult to turn pages with little arms.'
-                 ' Have you read it before?',
-                 'You might want to look at "{}", it\'s a real hit among the Stegasaurus\'s']
-            ),
-            'failure': {
-                'none_found_by_author': Choice([
-                    "I can't seem to think of any books written by {author}. Is there someone else you're interested in?"
-                ]),
-                'none_found_by_genre': Choice([
-                    "{genre}... Unfortunately, that's a genre I'm still ignorant of. Is there another you like?"
-                ]),
-                'book_list_exhausted': Choice([
-                    "That's just about all the books I know about in this area. Maybe there's another genre or author you like?"
-                ]),
-                'no_generating_entities': Choice([
-                    "I don't quite understand what kind of book you're interested in. Is there a genre or author you like?"
-                ])
-            }
-        }
+        self._renderer = TemplateRenderer('inform')
 
     # generating functions
     def _generate_by_author(self, context, authors):
@@ -94,6 +58,8 @@ class Inform(Handler):
                 if name == "author":
                     return self._generate_by_author(context, vals)
                 elif name == "author_like":
+                    return None
+                elif name == "title_like":
                     return None
                 elif name == "genre":
                     return self._generate_by_genre(context, vals)
@@ -152,21 +118,20 @@ class Inform(Handler):
         reason = system_intent['failure']
         if reason == 'none_found_by_author':
             author = wit_response['entities']['author'][0]['value']
-            return self._response_templates['failure'][reason].select().format(author=author)
+            return self._renderer.render('none_found_by_author', {'author': author})
         elif reason == 'none_found_by_genre':
             genre = wit_response['entities']['genre'][0]['value']
-            return self._response_templates['failure'][reason].select().format(genre=genre)
+            return self._renderer.render('none_found_by_genre', {'genre': genre})
         elif reason == 'book_list_exhausted':
-            return self._response_templates['failure'][reason].select().format()
+            return self._renderer.render('book_list_exhausted')
         elif reason == 'no_generating_entities':
-            return self._response_templates['failure'][reason].select().format()
+            return self._renderer.render('no_generating_entities')
         else:
             raise Exception('Tried to generate text for unknown failure "{}"'.format(reason))
 
     def _generate_book_response(self, context, wit_response, system_intent):
-        response = self._response_templates['book'].select()
-
-        return response.format(book=context['current_book'])
+        book = context['current_book']
+        return self._renderer.render('book', {'book': book})
 
     # text generation functions
     def _generate_text(self, context, wit_response, system_intent):
@@ -188,7 +153,8 @@ recognize any system intents.\n\n{}""".format(str(system_intent)))
         else:
             system_intent = self._handle_query(context, wit_response)
 
-        output['text'] = self._generate_text(context, wit_response, system_intent).capitalize()
+        output['text'] = self._generate_text(context, wit_response, system_intent)
+        output['text'] = output['text'][0].capitalize() + output['text'][1:]
         return output
 
 
