@@ -93,7 +93,7 @@ class Inform(Handler):
             books = gr.search_books(q, page + 1, field)
 
             if books:
-                return self.select_book(context, wit_response, books)
+                return self._select_book(context, wit_response, books)
             elif not called_from_generate:
                 return {'failure': 'book_list_exhausted'}
             else:
@@ -110,34 +110,47 @@ class Inform(Handler):
 
         return self._select_book(context, wit_response, books_query['books'])
 
+    def _generate_failure_response(self, context, wit_response, system_intent):
+        reason = system_intent['failure']
+        if reason == 'none_found_by_author':
+            return random.choice([
+                
+            ]).format()
+
+
+
+
+    def _generate_book_response(self, context, wit_response, system_intent):
+        response_options = \
+            ['Have you read "{book}"?',
+            'I read "{book}" last week, and highly recommend it!',
+            '"{book}" is quite nice. My friend B. Excelsus told me about it last week.',
+            'I\'m a big fan of "{book}". Have you heard of it before?',
+            'Let\'s see, have you ever heard of "{book}"?',
+            'Well then, you have a look at "{book}"!',
+            'You should read "{book}". Have you read this one before?',
+            'Let\'s see. How about "{book}"?',
+            'Okay, I would recommend "{book}".',
+            '"{book}" would be a good option. Have you read this one before?',
+            '"{book}" is still on my to-read list, but I would recommend it! I\'ve heard great things from my book club.',
+            'Based on what a good friend has told me, "{book}" is a pretty good read.'
+            'Have you read this one?',
+            'Hmm, alright, I would recommend "{book}". Have you read it before?',
+            'I think "{book}" would be good for that. In fact, I read it last year. Have you read it before?',
+            'Oh, "{book}" has been a hit among the other dinosaurs. Have you read it before?',
+            '"{book}" is a real page-turner, even though it\'s difficult to turn pages with little arms.'
+            ' Have you read it before?']
+        # randomize responses
+        response = random.choice(response_options)
+
+        return response.format(book=system_intent['book'])
+
     # text generation functions
     def _generate_text(self, context, wit_response, system_intent):
         if 'failure' in system_intent:
             return system_intent['failure']
         elif 'book' in system_intent:
-            # randomize responses
-            response_options = ['Have you read "{}"',
-                                'I have read "{}" last week, and highly recommend it!',
-                                '"{}" is quite nice. My friend has read that one before?',
-                                'I\'m a big fan of"{}". Have you read it before.',
-                                'Let\'s see. I would recommend "{}"?',
-                                'Well then, you should look into "{}"?',
-                                'You should read "{}". Have you read this one before?',
-                                'Let\'s see. How about "{}"?',
-                                'Okay, I would recommend "{}"?',
-                                '"{}" would be a good option. Have you read this one before.',
-                                '"{}" is still on my to-read list, but I would recommend it! I\'ve heard great things from the book club.',
-                                'Based on what a good friend has told me, "{}" is a pretty good read.'
-                                'Have you read this one?',
-                                'hmm, okay, I would recommend "{}". Have you read it before?',
-                                'I would recommend "{}". In fact I read it last year. Have you read it before?',
-                                'Oh, "{}" has been a hit among the other dinosaurs. Have you read it before?',
-                                '"{}" is a real page-turner. Although, it\'s difficult to turn pages with little arms.'
-                                ' Have you read it before?',
-                                ]
-            response = random.choice(response_options)
-
-            return response.format(system_intent['book'])
+            return self._generate_book_response(context, wit_response, system_intent)
         else:
             raise Exception("""Tried to generate text for the intent 'inform', but didn't
 recognize any system intents.\n\n{}""".format(str(system_intent)))
