@@ -1,9 +1,11 @@
 from brex.handlers.handler import Handler
+from brex.template_renderer import TemplateRenderer
+
 
 requestable_entities = ['title', 'author', 'review']
 class Request(Handler):
     def __init__(self):
-        pass
+        self._renderer = TemplateRenderer('request')
 
     def _fetch_entity(self, context, wit_response, entity):
         book = context['current_book']

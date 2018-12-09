@@ -1,0 +1,29 @@
+title = [
+"The title is \"{book}\"?"
+]
+
+author = [
+"The author is {book}"
+]
+
+description = [
+"{book}"
+]
+
+# failure
+none_found_by_title = [
+"I can't seem to think of any books written by {author}. Is there someone else you're interested in?"
+]
+
+none_found_by_author = [
+"{genre}... Unfortunately, that's a genre I'm still ignorant of. Is there another you like?",
+"Never heard of it"
+]
+
+book_list_description = [
+"That's just about all the books I know about in this area. Maybe there's another genre or author you like?"
+]
+
+no_generating_entities = [
+"I don't quite understand what kind of book you're interested in. Is there a genre or author you like?"
+]
