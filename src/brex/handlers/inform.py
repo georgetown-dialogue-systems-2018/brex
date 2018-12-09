@@ -4,14 +4,8 @@ from brex.handlers.handler import Handler
 import brex.goodreads as gr
 from brex.template_renderer import TemplateRenderer
 
-# def author(author_id):
-# def find_author(author_name):
-# def book(book_id=None, isbn=None):
-# def search_books(q, page=1, search_field='all'):
-# def review(review_id):
-
 filtering_entities = ['']
-generating_entities = ['author', 'author_like', 'title_like', 'genre']
+generating_entities = ['author', 'genre']
 
 class Inform(Handler):
     def __init__(self):
@@ -61,10 +55,6 @@ class Inform(Handler):
                 logging.debug('Generating intents based on slot "{}"'.format(name))
                 if name == "author":
                     return self._generate_by_author(context, vals)
-                elif name == "author_like":
-                    return None
-                elif name == "title_like":
-                    return None
                 elif name == "genre":
                     return self._generate_by_genre(context, vals)
                 else:
