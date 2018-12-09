@@ -14,7 +14,11 @@ class LazyGoodreadsClient(client.GoodreadsClient):
     # returns IDs instead of full book objects as the original version does
     def search_books(self, q, page=1, search_field='all'):
         resp = self.search_index(q, page, search_field)
-        works = resp['search']['results']['work']
+        try:
+            works = resp['search']['results']['work']
+        except TypeError:
+            works = []
+
         # If there's only one work returned, put it in a list.
         if type(works) == collections.OrderedDict:
             works = [works]
