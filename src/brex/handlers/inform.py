@@ -130,11 +130,11 @@ class Inform(Handler):
                                 'Based on what a good friend has told me, "{}" is a pretty good read.'
                                 'Have you read this one?',
                                 'hmm, okay, I would recommend "{}". Have you read it before?',
-                                'I would recommend "{}". In fact I read it last year. Have you read it before?',
+                                'I would recommend "{}". I tried to read this one on hunting trips. I read it last year. Have you read it before?',
                                 'Oh, "{}" has been a hit among the other dinosaurs. Have you read it before?',
                                 '"{}" is a real page-turner. Although, it\'s difficult to turn pages with little arms.'
                                 ' Have you read it before?',
-                                ]
+                                'You might want to look at "{}", it\'s a real hit among the Stegasaurus\'s']
             response = random.choice(response_options)
 
             return response.format(system_intent['book'])
