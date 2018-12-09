@@ -118,14 +118,14 @@ class Inform(Handler):
         reason = system_intent['failure']
         if reason == 'none_found_by_author':
             author = wit_response['entities']['author'][0]['value']
-            return self._renderer.render('failure.none_found_by_author', {'author': author})
+            return self._renderer.render('none_found_by_author', {'author': author})
         elif reason == 'none_found_by_genre':
             genre = wit_response['entities']['genre'][0]['value']
-            return self._renderer.render('failure.none_found_by_genre', {'genre': genre})
+            return self._renderer.render('none_found_by_genre', {'genre': genre})
         elif reason == 'book_list_exhausted':
-            return self._renderer.render('failure.book_list_exhausted')
+            return self._renderer.render('book_list_exhausted')
         elif reason == 'no_generating_entities':
-            return self._renderer.render('failure.no_generating_entities')
+            return self._renderer.render('no_generating_entities')
         else:
             raise Exception('Tried to generate text for unknown failure "{}"'.format(reason))
 

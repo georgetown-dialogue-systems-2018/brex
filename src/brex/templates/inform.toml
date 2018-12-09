@@ -18,13 +18,14 @@ book = [
 "You might want to look at \"{book}\", it's a real hit among the stegasauruses.",
 ]
 
-[failure]
+# failure
 none_found_by_author = [
 "I can't seem to think of any books written by {author}. Is there someone else you're interested in?"
 ]
 
 none_found_by_genre = [
-"{genre}... Unfortunately, that's a genre I'm still ignorant of. Is there another you like?"
+"{genre}... Unfortunately, that's a genre I'm still ignorant of. Is there another you like?",
+"Never heard of it"
 ]
 
 book_list_exhausted = [
