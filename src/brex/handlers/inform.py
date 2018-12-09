@@ -31,10 +31,12 @@ class Inform(Handler):
 
         if books:
             logging.debug('Found books for author "{}": {}'.format(author_name, str(books)))
-            return {'books': books}
+            return {'books': books,
+                    'author': author_name}
         else:
             logging.debug('Failed to find any books for author "{}"'.format(author_name))
-            return {'failure': 'none_found_by_author'}
+            return {'failure': 'none_found_by_author',
+                    'author': author_name}
 
     def _generate_by_genre(self, context, genre):
 
@@ -45,10 +47,12 @@ class Inform(Handler):
 
         if books:
             logging.debug('Found books for genre "{}": {}'.format(genre_name, str(books)))
-            return {'books': books}
+            return {'books': books,
+                    'genre': genre_name}
         else:
             logging.debug('Failed to find any books for genre "{}"'.format(genre_name))
-            return {'failure': 'none_found_by_genre'}
+            return {'failure': 'none_found_by_genre',
+                    'genre': genre_name}
 
     def _generate_books(self, context, wit_response):
         for name, vals in wit_response['entities'].items():
@@ -117,10 +121,10 @@ class Inform(Handler):
     def _generate_failure_response(self, context, wit_response, system_intent):
         reason = system_intent['failure']
         if reason == 'none_found_by_author':
-            author = wit_response['entities']['author'][0]['value']
+            author = system_intent['author']
             return self._renderer.render('none_found_by_author', {'author': author})
         elif reason == 'none_found_by_genre':
-            genre = wit_response['entities']['genre'][0]['value']
+            genre = system_intent['genre']
             return self._renderer.render('none_found_by_genre', {'genre': genre})
         elif reason == 'book_list_exhausted':
             return self._renderer.render('book_list_exhausted')
