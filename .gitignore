@@ -17,3 +17,4 @@ tramp
 # other
 **.DS_Store
 **.mypy**
+.idea*
