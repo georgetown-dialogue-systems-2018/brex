@@ -14,6 +14,8 @@ class Request(Handler):
             return {'title': book.title}
         elif entity == 'author':
             return {'author': book.authors}
+        elif entity == 'summary':
+            return {'description': book.description}
         else:
             raise Exception('Tried to request an unsupported entity: {}'.format(entity))
 

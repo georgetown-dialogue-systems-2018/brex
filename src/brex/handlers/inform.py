@@ -61,17 +61,9 @@ class Inform(Handler):
                     return self._generate_by_genre(context, vals)
                 else:
                     return None
-
-
-                    #return(self._generate_by_author(context, vals) if name == 'author' else
-                    #None if name == 'author_like' else
-                    #None)
         logging.debug('Tried to generate books, but not generating entities were detected.')
         logging.debug('Attempting to suggest one from the list, if present')
         return self._handle_reject(context, wit_response, called_from_generate=True)
-
-
-
 
     # filtering functions
     def _filter_books(self, context, wit_response, books):
@@ -79,11 +71,12 @@ class Inform(Handler):
 
     # handling functions
     def _select_book(self, context, wit_response, books):
-        book = books[0]
-
         # keep track of this in case we need to recommend another
-        self._already_recommended.add(book)
+        self._already_recommended.add(books[0])
         self._latest_books = books[1:]
+
+        # call the function to actually retrieve the info
+        book = gr.book(books[0])
 
         # let other handlers know
         context['current_book'] = book
