@@ -6,12 +6,12 @@
 				<meta charset="utf-8">
 				<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-				<title>Brex</title>
+				<title>B. Rex</title>
 		</head>
 
 		<body>
 				<nav class="navbar navbar-expand-lg navbar-light bg-light">
-						<a class="navbar-brand" href="#">Brex</a>
+						<a class="navbar-brand" href="#">B. Rex</a>
 						<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 								<span class="navbar-toggler-icon"></span>
 						</button>
@@ -123,14 +123,14 @@
 						 }
 
 						 function addUserMessage(text) {
-								 $('#messages').append(
-										 $('<div class="message-container message-container-user"><span class="message message-user">' + text + '</span></div>'));
+								 var elt = '<div class="message-container message-container-user"><span class="message message-user">' + text + '</span></div>';
+								 $('#messages').append($(elt));
 								 scrollDown();
 						 }
 
 						 function scrollDown() {
 								 var div = $('#messages');
-								 div.scrollTop = div.scrollHeight;
+								 div.scrollTop(div.height());
 						 }
 
 						 $(document).ready(function() {
@@ -177,7 +177,7 @@
 								 $('#textbox').focus();
 
 								 var nothingSaidTimeout = setTimeout(function() {
-										 addBrexMessage("Hi, I'm B. Rex! Would you like a book recommendation? Tell me about your favorite genre or author.");
+										 addBrexMessage('<img src="static/brex.jpg" style="width:70%;"></img><br><br>Hi, I\'m B. Rex! Would you like a book recommendation? Tell me about your favorite genre or author.');
 								 }, 5000);
 
 						 });

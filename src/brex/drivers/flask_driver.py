@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, send_from_directory
 from flask_socketio import SocketIO, send, emit
 import os
 
@@ -19,6 +19,10 @@ class FlaskDriver(Driver):
         @app.route('/')
         def index():
             return render_template('index.html')
+
+        @app.route('/static/<path:path>')
+        def send_static(path):
+            return send_from_directory('static', path)
 
         @socketio.on('user-connected')
         def user_connected(data):
