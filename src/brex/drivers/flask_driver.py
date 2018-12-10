@@ -20,7 +20,6 @@ class FlaskDriver(Driver):
         def index():
             return render_template('index.html')
 
-
         @socketio.on('user-connected')
         def user_connected(data):
             print("connected")
