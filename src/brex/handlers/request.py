@@ -69,6 +69,10 @@ class Request(Handler):
                     # i.e., merge the `result` dict into `system_intent`
                     system_intent.update(result)
 
+        if len(system_intent.keys()) == 0:
+            logging.error("Encountered a request without an intent. Falling back to giving a summary.")
+            system_intent.update(self._fetch_entity(context, wit_response, "summary"))
+
         logging.debug("System intent: {}".format(system_intent))
 
         output['text'] = self._generate_text(context, wit_response, system_intent)

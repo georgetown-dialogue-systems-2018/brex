@@ -1,6 +1,7 @@
 from flask import Flask, render_template, send_from_directory
 from flask_socketio import SocketIO, send, emit
 import os
+import logging
 
 from brex.drivers.driver import Driver
 import brex.config as cfg
@@ -39,7 +40,11 @@ class FlaskDriver(Driver):
             session = data['session']
             message = data['message']
 
-            response = sessions[session].respond(message)
+            try:
+                response = sessions[session].respond(message)
+            except Exception as e:
+                logging.error("Encountered an error while attempting to respond. Error: {}".format(e))
+                response = {'text': 'Sorry, I think I dozed off--what was that?'}
             should_exit = response['exit'] if 'exit' in response else False
             socket_data = {'message': response['text'], 'exit': should_exit}
             emit('brex-message', socket_data)
