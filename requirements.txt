@@ -5,3 +5,6 @@ bs4
 toml
 flask
 flask-socketio
+python-engineio==3.0
+gevent==1.2.0
+requests

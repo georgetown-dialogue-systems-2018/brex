@@ -1,4 +1,5 @@
 debug = False
+mode = 'terminal'
 
 # for goodreads
 gr_api_key = ''

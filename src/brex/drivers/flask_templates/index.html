@@ -129,8 +129,8 @@
 						 }
 
 						 function scrollDown() {
-								 var div = $('#messages');
-								 div.scrollTop(div.height());
+								 var div = document.getElementById('messages');
+								 div.scrollTop = div.scrollHeight;
 						 }
 
 						 $(document).ready(function() {
