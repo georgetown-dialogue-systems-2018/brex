@@ -21,6 +21,10 @@ class Request(Handler):
         else:
             raise Exception('Tried to request an unsupported entity: {}'.format(entity))
 
+    def _generate_book_response(self, context, wit_response, system_intent):
+        book = context['current_book']
+        return self._renderer.render('book', {'book': book})
+
     def _generate_text(self, context, wit_response, system_intent):
         return str(system_intent)
 
