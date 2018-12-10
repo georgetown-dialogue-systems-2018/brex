@@ -3,3 +3,5 @@ wit
 diskcache
 bs4
 toml
+flask
+flask-socketio

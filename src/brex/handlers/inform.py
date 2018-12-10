@@ -10,7 +10,7 @@ generating_entities = ['author', 'genre']
 class Inform(Handler):
     def __init__(self):
         self._already_recommended = set()
-        self._latest_books = None
+        self._latest_books = []
         self._latest_search_params = None
 
         self._renderer = TemplateRenderer('inform')
@@ -86,6 +86,9 @@ class Inform(Handler):
         if len(self._latest_books) > 0:
             return self._select_book(context, wit_response, self._latest_books)
         else:
+            if not self._latest_search_params:
+                return {'failure': 'no_generating_entities'}
+
             q, page, field = self._latest_search_params
             self._latest_search_params = (q, page + 1, field)
             books = gr.search_books(q, page + 1, field)

@@ -6,3 +6,10 @@ gr_api_secret = ''
 
 # for wit
 wit_access_token = ''
+
+# flask
+# should be a long stream of random bytes
+#   see: http://flask.pocoo.org/docs/1.0/config/
+flask_secret = '' 
+flask_host = "0.0.0.0"
+flask_port = 5000

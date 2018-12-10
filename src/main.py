@@ -1,6 +1,7 @@
 import logging
 
 from brex.drivers.terminal_driver import TerminalDriver
+from brex.drivers.flask_driver import FlaskDriver
 from brex.wit_manager import WitManager
 import brex.config as cfg
 
@@ -10,7 +11,7 @@ def main():
 
     logging.basicConfig(level=(logging.DEBUG if cfg.debug else logging.INFO))
 
-    mode = 'terminal'
+    mode = cfg.mode
     manager = 'wit'
 
     if manager == 'wit':
@@ -18,6 +19,8 @@ def main():
 
     if mode == 'terminal':
         TerminalDriver(dm_class).run()
+    elif mode == 'flask':
+        FlaskDriver(dm_class).run()
 
 if __name__ == '__main__':
     main()

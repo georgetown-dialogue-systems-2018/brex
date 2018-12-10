@@ -1,0 +1,188 @@
+<html>
+		<head>
+				<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+				<!-- Required meta tags -->
+				<meta charset="utf-8">
+				<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+				<title>Brex</title>
+		</head>
+
+		<body>
+				<nav class="navbar navbar-expand-lg navbar-light bg-light">
+						<a class="navbar-brand" href="#">Brex</a>
+						<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+								<span class="navbar-toggler-icon"></span>
+						</button>
+
+						<div class="collapse navbar-collapse" id="navbarSupportedContent">
+								<ul class="navbar-nav mr-auto">
+										<li class="nav-item">
+												<a class="nav-link" href="https://github.com/georgetown-dialogue-systems-2018/brex">Code</a>
+										</li>
+								</ul>
+						</div>
+				</nav>
+
+				<div id="container" class="d-flex justify-content-center">
+						<div id="chatbox" class="p-3 m-2 d-flex flex-column">
+
+								<div id="messages" class="border border-secondary rounded p-2">
+								</div>
+
+								<form id="input" class="input-group">
+										<input type="text" id="textbox" class="form-control rounded-left">
+										<input type="submit"
+													 id="submit-button"
+													 class="btn btn-primary btn-lg"
+													 value="Send"
+													 style="border-bottom-left-radius:0;border-top-left-radius:0;">
+								</form>
+						</div>
+				</div>
+
+
+
+				<style>
+				 #container {
+						 height: calc(100% - 56px);
+				 }
+				 #chatbox {
+						 max-width: 800px;
+				 }
+				 #messages {
+						 width: 800px;
+						 margin-bottom: 0.5em;
+						 flex: 1;
+						 overflow-y: scroll;
+				 }
+				 #input {
+						 width: 800px;
+				 }
+				 .message-container {
+						 margin: 0.8em 0;
+						 display: flex;
+				 }
+				 .message-container-user {
+						 justify-content: flex-end;
+				 }
+
+				 .message {
+						 line-height: 1.28;
+						 font-size: 14px;
+						 font-family: Helvetica Neue, Segoe UI, Helvetica, Arial, sans-serif;
+						 text-rendering: optimizeLegibility;
+						 color: white;
+						 border-radius: 1.3em;
+						 white-space: pre-wrap;
+						 max-width: 70%;
+						 box-sizing: content-box;
+						 word-wrap: break-word;
+						 padding: 0.7em;
+				 }
+				 .message-brex {
+						 background-color: rgb(103, 184, 104);
+				 }
+				 .message-user {
+						 background-color: #0084ff;
+				 }
+
+				 @media only screen and (max-width: 800px) {
+						 #messages {
+								 width: 100%;
+						 }
+						 #input {
+								 width: 100%;
+						 }
+				 }
+				</style>
+
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+				<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+				<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+				<script>
+
+				 (function() {
+						 function guid() {
+								 function s4() {
+										 return Math.floor((1 + Math.random()) * 0x10000)
+																.toString(16)
+																.substring(1);
+								 }
+								 return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+												s4() + '-' + s4() + s4() + s4();
+						 }
+
+						 function addBrexMessage(text) {
+								 $('#messages').append(
+										 $('<div class="message-container"><span class="message message-brex">' + text + '</span></div>'));
+								 scrollDown();
+						 }
+
+						 function addUserMessage(text) {
+								 $('#messages').append(
+										 $('<div class="message-container message-container-user"><span class="message message-user">' + text + '</span></div>'));
+								 scrollDown();
+						 }
+
+						 function scrollDown() {
+								 var div = $('#messages');
+								 div.scrollTop = div.scrollHeight;
+						 }
+
+						 $(document).ready(function() {
+						     // random id to identify this session
+								 var session = guid();
+
+								 var socket = io.connect('http://' + document.domain + ':' + location.port);
+								 socket.on('connect', function() {
+										 socket.emit('user-connected', {session: session});
+								 });
+
+								 socket.on('disconnect', function () {
+										 socket.emit('user-disconnected', {session: session});
+								 });
+
+								 socket.on('brex-message', function (data) {
+										 setTimeout(function() {
+												 addBrexMessage(data.message);
+												 scrollDown();
+												 if (!data.exit) {
+														 $('#submit-button').removeAttr('disabled', 'disabled');
+												 }
+										 }, Math.random() * 1200 + 300);
+								 });
+
+								 $('#input').on('submit', function(e) {
+										 e.preventDefault();
+										 var textbox = $('#textbox');
+										 var message = textbox.val();
+										 if (message) {
+												 socket.emit('user-message', {message: message, session: session});
+												 addUserMessage(message);
+												 scrollDown();
+												 textbox.val('').focus();
+
+												 if (nothingSaidTimeout) {
+														 clearTimeout(nothingSaidTimeout);
+														 nothingSaidTimeout = undefined;
+												 }
+										 }
+										 $('#submit-button').attr('disabled', 'disabled');
+								 });
+
+								 $('#textbox').focus();
+
+								 var nothingSaidTimeout = setTimeout(function() {
+										 addBrexMessage("Hi, I'm B. Rex! Would you like a book recommendation? Tell me about your favorite genre or author.");
+								 }, 5000);
+
+						 });
+				 })();
+
+				</script>
+		</body>
+</html>
