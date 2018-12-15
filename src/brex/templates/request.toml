@@ -1,24 +1,26 @@
 title = [
-"The book is called \"{title}\"."
+"""The book is called '{title}'."""
 ]
 
 author = [
-"{author} wrote it."
+"""{author} wrote it."""
 ]
 
 summary = [
-"Here's how my friend summarized it once:\n\n{summary}"
+"""Here's how my friend summarized it once:
+
+{summary}"""
 ]
 
 rating = [
-"From what I've heard from my friends, I'd rate it around {rating} stars out of 5."
+"""From what I've heard from my friends, I'd rate it around {rating} stars out of 5."""
 ]
 
 # failure
 no_current_book = [
-"Which book are you referring to?"
+"""Which book are you referring to?"""
 ]
 
 no_reviews = [
-"I don't know too much about this one, actually."
+"""I don't know too much about this one, actually."""
 ]
