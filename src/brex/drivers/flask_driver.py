@@ -27,7 +27,6 @@ class FlaskDriver(Driver):
 
         @socketio.on('user-connected')
         def user_connected(data):
-            print("connected")
             sessions[data['session']] = self._dm_class()
 
         @socketio.on('user-disconnected')
@@ -36,7 +35,6 @@ class FlaskDriver(Driver):
 
         @socketio.on('user-message')
         def test_message(data):
-            print(data)
             session = data['session']
             message = data['message']
 
