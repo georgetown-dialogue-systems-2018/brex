@@ -3,14 +3,17 @@ import importlib
 import logging
 
 from wit import Wit
+from flask_socketio import Namespace, emit
 import brex.config as cfg
 
 
 def snake2title(s):
     return "".join([w.capitalize() for w in s.split('_')])
 
-class WitManager(object):
-    def __init__(self):
+class WitManager(Namespace):
+    def __init__(self, namespace):
+        super().__init__(namespace)
+
         # Wit is a wrapper for the wit.ai HTTP API
         self._wit_client = Wit(cfg.wit_access_token)
 
@@ -98,3 +101,28 @@ or there was no handler for the intent.''')
                                          'handler': handler_response})
 
         return handler_response
+
+
+    # Flask SocketIO methods
+    def on_connect(self):
+        pass
+
+    def on_disconnect(self):
+        pass
+
+    def on_user_message(self, data):
+        message = data['message']
+
+        try:
+            response = self.respond(message)
+        except Exception as e:
+            logging.error("Encountered an error while attempting to respond. Error: {}".format(e))
+            response = {'text': 'Sorry, I think I dozed off--what was that?'}
+        should_exit = response['exit'] if 'exit' in response else False
+        socket_data = {'message': response['text'], 'exit': should_exit}
+        emit('brex_message', socket_data)
+
+        if should_exit:
+            self.reset()
+
+

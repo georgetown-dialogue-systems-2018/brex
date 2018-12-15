@@ -2,6 +2,10 @@ import logging
 
 from brex.handlers.handler import Handler
 from brex.template_renderer import TemplateRenderer
+from brex.summarize import summarize
+import brex.config as cfg
+from brex.config import summarization_sentence_count as initial_sentence_count
+import brex.goodreads as gr
 
 
 requestable_entities = ['title', 'author', 'summary', 'rating']
@@ -9,9 +13,42 @@ requestable_entities = ['title', 'author', 'summary', 'rating']
 class Request(Handler):
     def __init__(self):
         self._renderer = TemplateRenderer('request')
+        self._last_discussed_book = None
+        self._reviews = None
+
+    def _fetch_description(self, context, wit_response, book):
+        # make sure we have reviews
+        self._reviews = self._reviews or gr.reviews(book.gid)
+        if len(self._reviews) == 0:
+            return {'failure': 'no_reviews'}
+
+        # begin with the whole review
+        summary = self._reviews[0]
+        logging.debug("Found a review with {} chars...".format(summary))
+
+        # attempt to summarize if it's too long
+        sentence_count = initial_sentence_count
+        prev_summary = ""
+        while len(summary) > cfg.summarization_max_chars:
+            sentence_count -= 1
+            prev_summary = summary
+            summary = summarize(self._reviews[0], sentence_count = sentence_count)
+            logging.debug("After summarization: {} chars".format(len(summary)))
+
+        # summarization might have returned nothing with a low sentence count
+        # back off to the last one that had text
+        if not summary:
+            summary = prev_summary or self._reviews[0]
+
+        # discard the review we've successfully sent to the user
+        self._reviews = self._reviews[1:]
+        return {'summary': summary}
 
     def _fetch_entity(self, context, wit_response, entity):
         book = context['current_book']
+        if self._last_discussed_book != book:
+            self._last_discussed_book = book
+            self._reviews = None
 
         if not book:
             return {'failure': 'no_current_book'}
@@ -20,7 +57,7 @@ class Request(Handler):
         elif entity == 'author':
             return {'author': book.authors}
         elif entity == 'summary':
-            return {'summary': book.description}
+            return self._fetch_description(context, wit_response, book)
         elif entity == 'rating':
             return {'rating': book.average_rating}
         else:
@@ -35,6 +72,8 @@ class Request(Handler):
             reason = system_intent['failure']
             if reason == 'no_current_book':
                 return self._renderer.render('no_current_book')
+            if reason == 'no_reviews':
+                return self._renderer.render('no_reviews')
             else:
                 raise Exception('Tried to generate text for unknown failure "{}"'.format(reason))
         elif 'title' in system_intent:

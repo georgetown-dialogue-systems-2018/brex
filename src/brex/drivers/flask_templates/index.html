@@ -106,15 +106,6 @@
 				<script>
 
 				 (function() {
-						 function guid() {
-								 function s4() {
-										 return Math.floor((1 + Math.random()) * 0x10000)
-																.toString(16)
-																.substring(1);
-								 }
-								 return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-												s4() + '-' + s4() + s4() + s4();
-						 }
 
 						 function addBrexMessage(text) {
 								 $('#messages').append(
@@ -134,19 +125,9 @@
 						 }
 
 						 $(document).ready(function() {
-						     // random id to identify this session
-								 var session = guid();
-
 								 var socket = io.connect('http://' + document.domain + ':' + location.port);
-								 socket.on('connect', function() {
-										 socket.emit('user-connected', {session: session});
-								 });
 
-								 socket.on('disconnect', function () {
-										 socket.emit('user-disconnected', {session: session});
-								 });
-
-								 socket.on('brex-message', function (data) {
+								 socket.on('brex_message', function (data) {
 										 setTimeout(function() {
 												 addBrexMessage(data.message);
 												 scrollDown();
@@ -161,7 +142,7 @@
 										 var textbox = $('#textbox');
 										 var message = textbox.val();
 										 if (message) {
-												 socket.emit('user-message', {message: message, session: session});
+												 socket.emit('user_message', {message: message});
 												 addUserMessage(message);
 												 scrollDown();
 												 textbox.val('').focus();

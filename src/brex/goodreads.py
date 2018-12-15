@@ -2,6 +2,8 @@ import types
 import collections
 from goodreads import client
 from diskcache import FanoutCache
+from lxml.html import fromstring
+import requests
 
 import brex.config as cfg
 
@@ -46,5 +48,21 @@ def book(book_id=None, isbn=None):
 @CACHE.memoize(expire=86400)
 def search_books(q, page=1, search_field='all'):
     return CLIENT.search_books(q, page=page, search_field=search_field)
+
+@CACHE.memoize(expire=86400)
+def reviews(book_id):
+    r = requests.get('https://www.goodreads.com/book/show/' + str(book_id))
+    parsed_html = fromstring(r.text)
+    containers = parsed_html.xpath('//*[starts-with(@id, "reviewTextContainer")]')
+
+    full_reviews = []
+    for container in containers:
+        try:
+            full_review = container.xpath('./span[position() = 2]')[0]
+        except IndexError:
+            full_review = container.xpath('./span[position() = 1]')[0]
+        full_reviews.append(full_review)
+
+    return [review.text_content() for review in full_reviews]
 
 

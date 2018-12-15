@@ -1,16 +1,20 @@
 debug = False
 mode = 'terminal'
 
-# for goodreads
+#### for goodreads
 gr_api_key = ''
 gr_api_secret = ''
 
-# for wit
+#### for wit
 wit_access_token = ''
 
-# flask
-# should be a long stream of random bytes
-#   see: http://flask.pocoo.org/docs/1.0/config/
+#### for text summarization with sumy--see summarize.py
+summarization_language = "english"
+summarization_sentence_count = 5
+summarization_max_chars = 500
+
+#### flask
+# flask_secret should be a long stream of random bytes--see: http://flask.pocoo.org/docs/1.0/config/
 flask_secret = '' 
-flask_host = "0.0.0.0"
+flask_host = "127.0.0.1" # set to 0.0.0.0 to make accessible to other machines
 flask_port = 5000

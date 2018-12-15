@@ -12,6 +12,9 @@ from brex.drivers.flask_driver import FlaskDriver
 from brex.wit_manager import WitManager
 import brex.config as cfg
 
+def download_deps():
+    import nltk; nltk.download('punkt')
+
 def main():
     if not cfg.gr_api_key or not cfg.gr_api_secret or not cfg.wit_access_token:
         raise Exception("Goodreads and/or Wit secrets not found. Did you add them to brex/config.py?")

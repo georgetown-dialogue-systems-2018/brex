@@ -67,5 +67,4 @@ class Personal(Handler):
         else:
             output['text'] = self._handle_fallback(context, wit_response)
 
-        output['text'] = self._generate_text(context, wit_response, system_intent)
         return output

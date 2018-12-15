@@ -18,3 +18,7 @@ rating = [
 no_current_book = [
 "Which book are you referring to?"
 ]
+
+no_reviews = [
+"I don't know too much about this one, actually."
+]

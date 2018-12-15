@@ -25,29 +25,5 @@ class FlaskDriver(Driver):
         def send_static(path):
             return send_from_directory('static', path)
 
-        @socketio.on('user-connected')
-        def user_connected(data):
-            sessions[data['session']] = self._dm_class()
-
-        @socketio.on('user-disconnected')
-        def user_disconnected(data):
-            del sessions[data['session']]
-
-        @socketio.on('user-message')
-        def test_message(data):
-            session = data['session']
-            message = data['message']
-
-            try:
-                response = sessions[session].respond(message)
-            except Exception as e:
-                logging.error("Encountered an error while attempting to respond. Error: {}".format(e))
-                response = {'text': 'Sorry, I think I dozed off--what was that?'}
-            should_exit = response['exit'] if 'exit' in response else False
-            socket_data = {'message': response['text'], 'exit': should_exit}
-            emit('brex-message', socket_data)
-
-            if should_exit:
-                sessions[session].reset()
-
+        socketio.on_namespace(self._dm_class('/'))
         socketio.run(app, host=cfg.flask_host, port=cfg.flask_port, debug=cfg.debug)
