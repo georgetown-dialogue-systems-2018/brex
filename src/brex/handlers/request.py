@@ -53,7 +53,7 @@ class Request(Handler):
 
         # begin with the whole review
         summary = self._reviews[0]
-        logging.debug("Found a review with {} chars...".format(summary))
+        logging.debug("Found a review with {} chars...".format(len(summary)))
 
         # attempt to summarize if it's too long
         sentence_count = initial_sentence_count
