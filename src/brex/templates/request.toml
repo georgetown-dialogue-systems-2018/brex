@@ -7,9 +7,7 @@ author = [
 ]
 
 summary = [
-"""Here's how my friend summarized it once:
-
-{summary}"""
+"""Here's how my friend {friend} summarized it once:\n\n{summary}""",
 ]
 
 rating = [

@@ -6,7 +6,36 @@ from brex.summarize import summarize
 import brex.config as cfg
 from brex.config import summarization_sentence_count as initial_sentence_count
 import brex.goodreads as gr
+import names
 
+DINO_DICT = {
+    'a': 'Atrociraptor',
+    'b': 'Brachyceratops',
+    'c': 'Chasmosaurus',
+    'd': 'Deinodon',
+    'e': 'Edmontosaurus',
+    'f': 'Formosibittacus',
+    'g': 'Gorgosaurus',
+    'h': 'Hadrosaurus',
+    'i': 'Invicatrx',
+    'j': 'Judiceratops',
+    'k': 'Kosmoceratops',
+    'l': 'Lophorhothon',
+    'm': 'Mojoceratops',
+    'n': 'Nasutoceratops',
+    'o': 'Ojoraptorsaurus',
+    'p': 'Polyonax',
+    'q': 'Quaesitosaurus',
+    'r': 'Rajasaurus',
+    's': 'Saurolophus',
+    't': 'Tachiraptor',
+    'u': 'Utahraptor',
+    'v': 'Velociraptor',
+    'w': 'Weewarrasaurus',
+    'x': 'Xenoceratops',
+    'y': 'Yandusaurus',
+    'z': 'Zanabazar'
+}
 
 requestable_entities = ['title', 'author', 'summary', 'rating']
 
@@ -16,7 +45,7 @@ class Request(Handler):
         self._last_discussed_book = None
         self._reviews = None
 
-    def _fetch_description(self, context, wit_response, book):
+    def _fetch_summary(self, context, wit_response, book):
         # make sure we have reviews
         self._reviews = self._reviews or gr.reviews(book.gid)
         if len(self._reviews) == 0:
@@ -57,15 +86,17 @@ class Request(Handler):
         elif entity == 'author':
             return {'author': book.authors}
         elif entity == 'summary':
-            return self._fetch_description(context, wit_response, book)
+            return self._fetch_summary(context, wit_response, book)
         elif entity == 'rating':
             return {'rating': book.average_rating}
         else:
             raise Exception('Tried to request an unsupported entity: {}'.format(entity))
 
-    def _generate_book_response(self, context, wit_response, system_intent):
-        book = context['current_book']
-        return self._renderer.render('book', {'book': book})
+    def _generate_friend_name(self):
+        first_name = names.get_first_name()
+        first_letter = first_name[0].lower()
+        last_name = DINO_DICT[first_letter]
+        return first_name + " " + last_name
 
     def _generate_text(self, context, wit_response, system_intent):
         if 'failure' in system_intent:
@@ -85,7 +116,9 @@ class Request(Handler):
             return self._renderer.render('author', {'author': author})
         elif 'summary' in system_intent:
             summary = system_intent['summary']
-            return self._renderer.render('summary', {'summary': summary})
+            friend = self._generate_friend_name()
+            return self._renderer.render('summary', {'summary': summary,
+                                                     'friend': friend})
         elif 'rating' in system_intent:
             rating = system_intent['rating']
             return self._renderer.render('rating', {'rating': rating})
