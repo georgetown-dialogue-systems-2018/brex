@@ -6,5 +6,5 @@ class Greet(Handler):
 
     def handle(self, context, wit_response):
         output = {}
-        output['text'] = 'Hi, my name\'s B. Rex!'
+        output['text'] = 'Hi, my name\'s B. Rex! Why don\'t you tell me about your favorite kind of book?'
         return output
