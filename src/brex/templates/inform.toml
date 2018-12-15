@@ -1,7 +1,7 @@
 book = [
 """Have you read '{book}'?""",
 """I read '{book}' last week, and highly recommend it!""",
-"""'{book}' is quite nice. My friend B. Excelsus told me about it last week.""",
+"""'{book}' is quite nice. It's one of the first ones dad gave to me in the lab.""",
 """I'm a big fan of '{book}'. Have you heard of it before?""",
 """Let's see, have you ever heard of '{book}'?""",
 """Well then, you have a look at '{book}'!""",
@@ -13,9 +13,10 @@ book = [
 """Based on what a good friend has told me, '{book}' is a pretty good read. Have you read this one?""",
 """Hmm, alright, I would recommend '{book}'. Have you read it before?""",
 """I think '{book}' would be good for that. In fact, I read it last year. Have you read it before?""",
-"""Oh, '{book}' has been a hit among the other dinosaurs. Have you read it before?""",
-"""'{book}' is a real page-turner, even though it's difficult to turn pages with little arms. Have you read it before?""",
-"""You might want to look at '{book}', it's a real hit among the stegasauruses.""",
+"""Oh, we just read '{book}' the other week in the club. Have you read it before?""",
+"""'{book}' is a real page-turner, even though it's difficult to turn pages with little arms like mine. Have you read it before?""",
+"""You might want to look at '{book}', it's a real hit among the stegosauruses.""",
+"""For that, others I've talked to have really liked '{book}'. Have you heard of it?""",
 ]
 
 # failure
