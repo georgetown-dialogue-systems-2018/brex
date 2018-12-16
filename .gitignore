@@ -1,4 +1,5 @@
 __goodreads_cache__
+conversations
 src/brex/config.py
 **.pyc
 **/__pycache__

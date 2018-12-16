@@ -1,6 +1,9 @@
 debug = False
 mode = 'terminal'
 
+# relative to main.py. if None, don't log conversations
+convo_logging_dir = "../conversations"
+
 #### for goodreads
 gr_api_key = ''
 gr_api_secret = ''

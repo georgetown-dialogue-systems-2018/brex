@@ -1,6 +1,8 @@
 import os
 import importlib
 import logging
+from datetime import datetime
+import pprint
 
 from wit import Wit
 from flask_socketio import Namespace, emit
@@ -103,12 +105,30 @@ or there was no handler for the intent.''')
         return handler_response
 
 
+    def _log_convo(self):
+        logdir = cfg.convo_logging_dir
+        if logdir:
+            if not os.path.exists(logdir):
+                os.mkdir(logdir, 0o700)
+
+            filename = datetime.now().strftime("%y-%m-%d_%H:%M.%f")
+            history = self._context['history']
+
+            with open(logdir + os.sep + filename + ".py", 'w') as f:
+                f.write(pprint.pformat(history) + "\n")
+            with open(logdir + os.sep + filename + ".txt", 'w') as f:
+                lines = []
+                for pair in history:
+                    lines.append(pair['wit']['_text'])
+                    lines.append(pair['handler']['text'])
+                f.write("\n".join(lines) + "\n")
+
     # Flask SocketIO methods
     def on_connect(self):
         pass
 
     def on_disconnect(self):
-        pass
+        self._log_convo()
 
     def on_user_message(self, data):
         message = data['message']
@@ -123,6 +143,7 @@ or there was no handler for the intent.''')
         emit('brex_message', socket_data)
 
         if should_exit:
+            self._log_convo()
             self.reset()
 
 
