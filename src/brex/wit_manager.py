@@ -11,7 +11,7 @@ def snake2title(s):
     return "".join([w.capitalize() for w in s.split('_')])
 
 class WitManager(Namespace):
-    def __init__(self, namespace):
+    def __init__(self, namespace='/'):
         super().__init__(namespace)
 
         # Wit is a wrapper for the wit.ai HTTP API
