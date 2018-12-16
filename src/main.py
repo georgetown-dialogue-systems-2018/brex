@@ -2,10 +2,13 @@ import logging
 
 # https://github.com/urllib3/urllib3/issues/1176
 # sigh...
-import gevent.monkey
-gevent.monkey.patch_all()
-from requests.packages.urllib3.util.ssl_ import create_urllib3_context
-create_urllib3_context()
+try:
+    import gevent.monkey
+    gevent.monkey.patch_all()
+    from requests.packages.urllib3.util.ssl_ import create_urllib3_context
+    create_urllib3_context()
+except ImportError:
+    pass
 
 from brex.drivers.terminal_driver import TerminalDriver
 from brex.drivers.flask_driver import FlaskDriver
