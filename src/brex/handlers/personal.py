@@ -14,7 +14,7 @@ class Personal(Handler):
 
     def _handle_favorite_book(self, context, wit_response):
         context['current_book'] = gr.book('18839')
-        s = "I have my mind less made up about genres, but when it comes to the books I've enjoyed most, there's only one that makes it to the top. That book is 'Orlando' by Virginia Woolf, if you've heard of it. The main character, Orlando, lives for 300 years and has to grapple with the anachronism of his own existence. My father picked it out for me while I was still a teen in the lab, and I know why. It's because he must have understood my own bewilderment at being a genetically enhanced Tyrannosaurus rex in the modern day. As you can probably tell already from how long I've gone on about it, it resonated with me."
+        s = "I have my mind less made up about genres, but when it comes to the books I've enjoyed most, there's only one that makes it to the top. That book is <a href=\"https://www.goodreads.com/book/show/18839\">'Orlando' by Virginia Woolf</a>, if you've heard of it. The main character, Orlando, lives for 300 years and has to grapple with the anachronism of his own existence. My father picked it out for me while I was still a teen in the lab, and I know why. It's because he must have understood my own bewilderment at being a genetically enhanced Tyrannosaurus rex in the modern day. As you can probably tell already from how long I've gone on about it, it resonated with me."
         return s
 
     def _handle_genre(self, context, wit_response):

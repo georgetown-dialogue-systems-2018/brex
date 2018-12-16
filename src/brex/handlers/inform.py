@@ -128,6 +128,7 @@ class Inform(Handler):
 
     def _generate_book_response(self, context, wit_response, system_intent):
         book = context['current_book']
+        book = '<a href="https://www.goodreads.com/book/show/' + book.gid + '">' + book.title + '</a>'
         return self._renderer.render('book', {'book': book})
 
     # text generation functions
