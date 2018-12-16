@@ -119,8 +119,8 @@ or there was no handler for the intent.''')
             with open(logdir + os.sep + filename + ".txt", 'w') as f:
                 lines = []
                 for pair in history:
-                    lines.append(pair['wit']['_text'])
-                    lines.append(pair['handler']['text'])
+                    lines.append("User:\t" + pair['wit']['_text'])
+                    lines.append("Brex:\t" + pair['handler']['text'])
                 f.write("\n".join(lines) + "\n")
 
     # Flask SocketIO methods
