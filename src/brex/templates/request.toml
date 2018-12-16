@@ -19,7 +19,6 @@ summary = [
 """Here's how my friend {friend} summarized it once:\n\n{summary}""",
 """{friend}'s read this one. This is what they had to say:\n\n{summary}""",
 """{friend} wrote me about this:\n\n{summary}""",
-"""{summary}""",
 ]
 
 rating = [
