@@ -2,11 +2,15 @@ from random import choice
 from functools import reduce
 from operator import getitem
 import os
-import toml
+
+from brex.common import import_python_file
 
 class TemplateRenderer():
     def __init__(self, filename):
-        self._data = toml.load(os.sep.join(['brex', 'templates', filename + '.toml']))
+        pyfile = import_python_file(
+            os.sep.join(['brex', 'templates', filename + '.py']))
+
+        self._data = getattr(pyfile, filename)
 
     def render(self, kind, keywords={}, strategy="random"):
         keys = kind.split(".")
@@ -16,4 +20,3 @@ class TemplateRenderer():
             return choice(templates).format(**keywords)
         else:
             raise Exception("Unknown strategy '{}'".format(strategy))
-

@@ -19,6 +19,7 @@ def download_deps():
     import nltk; nltk.download('punkt')
 
 def main():
+    download_deps()
     if not cfg.gr_api_key or not cfg.gr_api_secret or not cfg.wit_access_token:
         raise Exception("Goodreads and/or Wit secrets not found. Did you add them to brex/config.py?")
 
@@ -30,6 +31,8 @@ def main():
     if manager == 'wit':
         dm_class = WitManager
 
+    # Drivers take a reference to a Manager constructor. The Driver handles user I/O and any other
+    # UI work necessary, and it uses an instance of the Manager to decide how to respond.
     if mode == 'terminal':
         TerminalDriver(dm_class).run()
     elif mode == 'flask':

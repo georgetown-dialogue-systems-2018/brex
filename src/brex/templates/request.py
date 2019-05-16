@@ -1,0 +1,55 @@
+request = {
+    "title": [
+        {"text": """The book is called '{title}'.""",
+         "suggestions": []},
+        {"text": """It's called '{title}'.""",
+         "suggestions": []},
+        {"text": """The name of the book is '{title}'.""",
+         "suggestions": []},
+        {"text": """'{title}'.""",
+         "suggestions": []},
+        {"text": """'{title}'.""",
+         "suggestions": []},
+        {"text": """'{title}'.""",
+         "suggestions": []},
+    ],
+    "author": [
+        {"text": """{author} wrote it.""",
+         "suggestions": []},
+        {"text": """It's by {author}.""",
+         "suggestions": []},
+        {"text": """{author}.""",
+         "suggestions": []},
+        {"text": """{author}.""",
+         "suggestions": []},
+        {"text": """{author}.""",
+         "suggestions": []},
+    ],
+    "summary": [
+        {"text": """Here's how my friend {friend} summarized it once:\n\n{summary}""",
+         "suggestions": []},
+        {"text": """{friend}'s read this one. This is what they had to say:\n\n{summary}""",
+         "suggestions": []},
+        {"text": """{friend} wrote me about this:\n\n{summary}""",
+         "suggestions": []},
+    ],
+    "rating": [
+        {"text": """The club's consensus was around {rating} stars out of 5.""",
+         "suggestions": []},
+    ],
+    # failure
+    "no_current_book": [
+        {"text": """Which one?""",
+        "suggestions": []},
+        {"text": """Which book are you referring to?""",
+        "suggestions": []},
+        {"text": """Which book are you talking about?""",
+        "suggestions": []},
+    ],
+    "no_reviews": [
+        {"text": """I don't know too much about this one, actually.""",
+         "suggestions": []},
+        {"text": """I don't know too much about this one. Maybe there's another book you'd like to hear about?""",
+         "suggestions": []},
+    ]
+}

@@ -1,5 +1,4 @@
 import os
-import importlib
 import logging
 from datetime import datetime
 import pprint
@@ -7,6 +6,7 @@ import pprint
 from wit import Wit
 from flask_socketio import Namespace, emit
 import brex.config as cfg
+from brex.common import import_python_file
 
 
 def snake2title(s):
@@ -14,6 +14,9 @@ def snake2title(s):
 
 class WitManager(Namespace):
     def __init__(self, namespace='/'):
+        # Namespace is a superclass we need to inherit from for socket.io
+        # Come to think of it, this should probably be living in the driver
+        # instead of the manager...
         super().__init__(namespace)
 
         # Wit is a wrapper for the wit.ai HTTP API
@@ -53,16 +56,10 @@ class WitManager(Namespace):
                         and not filename.startswith('.')]
 
         for fname in filenames:
-            fname = fname[:-3]   # strip '.py'
-            intent_name = fname
+            handler_module = import_python_file(basedir + os.sep + fname)
+            handler_class = getattr(handler_module, snake2title(fname[:-3]))
 
-            fpath = basedir + os.sep + fname
-            fpath = fpath.replace(os.sep, '.')
-
-            handler_module = importlib.import_module(fpath)
-            handler_class = getattr(handler_module, snake2title(fname))
-
-            self._handlers[intent_name] = handler_class()
+            self._handlers[fname] = handler_class()
 
         logging.debug('Loaded wit handlers: {}'.format(str(self._handlers)))
 
@@ -80,22 +77,24 @@ or there was no handler for the intent.''')
         if cfg.debug:
             return self._handlers['echo']
         else:
-            # todo: use something else that will try to change topic or something
+            # TODO: use something else that will try to change topic or something
             return self._handlers['echo']
 
     def respond(self, user_input):
         """Take user input and return a dict instructing the driver on how to
         behave:
           - text: the system's output
+          - suggestions: optional, a list of input suggestions the driver should
+                         display for the user. Drivers may choose not to implement
+                         display of suggestions.
           - exit: optional, driver should exit if it is present and truthy"""
-        output = {}
-        logging.debug("Received user input: '{}'".format(user_input))
+        logging.debug("Received user input: '%s'", user_input)
 
         wit_response = self._wit_client.message(user_input)
-        logging.debug("Received response from Wit: {}".format(str(wit_response)))
+        logging.debug("Received response from Wit: %s", str(wit_response))
 
         handler = self._choose_handler(wit_response)
-        logging.debug("Selected handler {}".format(str(handler)))
+        logging.debug("Selected handler %s", str(handler))
 
         handler_response = handler.handle(self._context, wit_response)
 
@@ -145,5 +144,3 @@ or there was no handler for the intent.''')
         if should_exit:
             self._log_convo()
             self.reset()
-
-

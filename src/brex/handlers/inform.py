@@ -131,8 +131,8 @@ class Inform(Handler):
         book = '<a href="https://www.goodreads.com/book/show/' + book.gid + '">' + book.title + '</a>'
         return self._renderer.render('book', {'book': book})
 
-    # text generation functions
-    def _generate_text(self, context, wit_response, system_intent):
+    # response generation functions
+    def _generate_response(self, context, wit_response, system_intent):
         if 'failure' in system_intent:
             return self._generate_failure_response(context, wit_response, system_intent)
         elif 'book' in system_intent:
@@ -143,18 +143,12 @@ recognize any system intents.\n\n{}""".format(str(system_intent)))
 
     # top level function called by the manager
     def handle(self, context, wit_response):
-        output = {}
-
         entities = wit_response['entities']
         if 'reject' in entities:
             system_intent = self._handle_reject(context, wit_response)
         else:
             system_intent = self._handle_query(context, wit_response)
 
-        output['text'] = self._generate_text(context, wit_response, system_intent)
+        output = self._generate_response(context, wit_response, system_intent)
         output['text'] = output['text'][0].capitalize() + output['text'][1:]
         return output
-
-
-
-

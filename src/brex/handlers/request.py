@@ -126,8 +126,6 @@ class Request(Handler):
             raise Exception('Tried to generate text for some unknown entity. System intent: {}'.format(system_intent))
 
     def handle(self, context, wit_response):
-        output = {}
-
         entities = wit_response['entities']
         system_intent = {}
         for entity, value in entities.items():
@@ -147,6 +145,4 @@ class Request(Handler):
 
         logging.debug("System intent: {}".format(system_intent))
 
-        output['text'] = self._generate_text(context, wit_response, system_intent)
-
-        return output
+        return self._generate_text(context, wit_response, system_intent)
