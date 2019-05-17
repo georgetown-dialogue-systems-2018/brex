@@ -104,6 +104,7 @@ or there was no handler for the intent.''')
         self._context['history'].append({'wit': wit_response,
                                          'handler': handler_response})
 
+        logging.debug("Responding: %s", str(handler_response))
         return handler_response
 
 
@@ -138,10 +139,13 @@ or there was no handler for the intent.''')
         try:
             response = self.respond(message)
         except Exception as e:
-            logging.error("Encountered an error while attempting to respond. Error: {}".format(e))
+            logging.error("Encountered an error while attempting to respond.")
+            logging.error(traceback.format_exc())
             response = {'text': 'Sorry, I think I dozed off--what was that?'}
         should_exit = response['exit'] if 'exit' in response else False
-        socket_data = {'message': response['text'], 'exit': should_exit}
+        socket_data = {'message': response['text'],
+                       'suggestions': response['suggestions'] if 'suggestions' in response else None,
+                       'exit': should_exit}
         emit('brex_message', socket_data)
 
         if should_exit:

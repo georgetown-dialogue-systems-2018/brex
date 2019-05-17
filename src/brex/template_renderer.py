@@ -17,6 +17,8 @@ class TemplateRenderer():
         templates = reduce(getitem, keys, self._data)
 
         if strategy == "random":
-            return choice(templates).format(**keywords)
+            template = choice(templates)
+            template['text'] = template['text'].format(**keywords)
+            return template
         else:
             raise Exception("Unknown strategy '{}'".format(strategy))

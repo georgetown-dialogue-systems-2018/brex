@@ -73,7 +73,6 @@
              font-size: 14px;
              font-family: Helvetica Neue, Segoe UI, Helvetica, Arial, sans-serif;
              text-rendering: optimizeLegibility;
-             color: white;
              border-radius: 1.3em;
              white-space: pre-wrap;
              max-width: 70%;
@@ -86,10 +85,29 @@
          }
          .message-brex {
              background-color: rgb(103, 184, 104);
+             color: white;
          }
          .message-user {
              background-color: #0084ff;
+             color: white;
          }
+
+		 #suggestion-container {
+			 text-align: center;
+		 }
+		 .message-suggestion {
+			 display: inline-block;
+			 border: 1px solid #0084ff;
+			 background-color: white;
+			 color: #0084ff;
+			 margin: 0.5em;
+			 cursor: pointer;
+		 }
+		 .message-suggestion:hover {
+			 color: white;
+			 background-color: #0084ff;
+			 border: 1px solid white;
+		 }
 
          @media only screen and (max-width: 800px) {
              #messages {
@@ -109,10 +127,29 @@
         <script>
 
          (function() {
+			 var socket;
 
              function addBrexMessage(text) {
                  $('#messages').append(
                      $('<div class="message-container"><span class="message message-brex">' + text + '</span></div>'));
+                 scrollDown();
+             }
+
+             function addSuggestions(suggestions) {
+                 function makeSuggestion(suggestion) {
+					 var div = $('<div class="message message-suggestion">' + suggestion + '</div>')
+					 div.click(function() {
+						 $("#suggestion-container").remove();
+						 sendUserMessage(suggestion);
+					 });
+                     return div;
+                 }
+
+                 var container = $('<div id="suggestion-container"></div>');
+                 $('#messages').append(container);
+                 suggestions.forEach(function(suggestion) {
+                     container.append(makeSuggestion(suggestion));
+                 })
                  scrollDown();
              }
 
@@ -122,17 +159,29 @@
                  scrollDown();
              }
 
+			 function sendUserMessage(message) {
+                 if (message) {
+                     socket.emit('user_message', {message: message});
+                     addUserMessage(message);
+                     scrollDown();
+                 }
+                 $('#submit-button').attr('disabled', 'disabled');
+			 }
+
              function scrollDown() {
                  var div = document.getElementById('messages');
                  div.scrollTop = div.scrollHeight;
              }
 
              $(document).ready(function() {
-                 var socket = io.connect('http://' + document.domain + ':' + location.port);
+                 socket = io.connect('http://' + document.domain + ':' + location.port);
 
                  socket.on('brex_message', function (data) {
                      setTimeout(function() {
                          addBrexMessage(data.message);
+                         if (data.suggestions) {
+                             addSuggestions(data.suggestions);
+                         }
                          scrollDown();
                          if (!data.exit) {
                              $('#submit-button').removeAttr('disabled', 'disabled');
@@ -142,20 +191,14 @@
 
                  $('#input').on('submit', function(e) {
                      e.preventDefault();
-                     var textbox = $('#textbox');
-                     var message = textbox.val();
-                     if (message) {
-                         socket.emit('user_message', {message: message});
-                         addUserMessage(message);
-                         scrollDown();
-                         textbox.val('').focus();
-
-                         if (nothingSaidTimeout) {
-                             clearTimeout(nothingSaidTimeout);
-                             nothingSaidTimeout = undefined;
-                         }
+					 var textbox = $('#textbox');
+					 var message = textbox.val();
+					 sendUserMessage(message);
+                     textbox.val('').focus();
+                     if (nothingSaidTimeout) {
+                         clearTimeout(nothingSaidTimeout);
+                         nothingSaidTimeout = undefined;
                      }
-                     $('#submit-button').attr('disabled', 'disabled');
                  });
 
                  $('#textbox').focus();
