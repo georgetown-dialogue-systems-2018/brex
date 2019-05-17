@@ -21,28 +21,31 @@ inform = {
         {"text": "You should read '{book}'. Have you read this one before?",
          "suggestions": ["No, what's it about?",
                          "Yes, I have"]},
-        {"text": "Let's see. How about '{book}'?",
+        {"text": "Grr... Let's see. How about '{book}'?",
          "suggestions": ["No, what's it about?",
                          "Yes, I have"]},
-        {"text": "Okay, I would recommend '{book}'.",
+        {"text": "Okay, I would recommend '{book}'. I would give you my copy if it wasn't accidentally eaten by a Giganotosaurus",
          "suggestions": ["No, what's it about?",
                          "Yes, I have"]},
-        {"text": "'{book}' would be a good option. Have you read this one before?",
+        {"text": "Okay, I would recommend '{book}'. But the Troodons always have it checked out...",
+         "suggestions": ["No, what's it about?",
+                         "Yes, I have"]},
+        {"text": "'{book}' would be a good option. I know the Pterodactyls love it?",
          "suggestions": ["No, what's it about?",
                          "Yes, I have"]},
         {"text": "'{book}' is still on my to-read list, but I would recommend it! I've heard great things from my book club.",
          "suggestions": ["No, what's it about?",
                          "Yes, I have"]},
-        {"text": "Based on what a good friend has told me, '{book}' is a pretty good read. Have you read this one?",
+        {"text": "Based on what my friend Megalo has told me, '{book}' is a pretty good read. Have you read this one?",
          "suggestions": ["No, what's it about?",
                          "Yes, I have"]},
-        {"text": "Hmm, alright, I would recommend '{book}'. Have you read it before?",
+        {"text": "Grr, alright, I would recommend '{book}'. Have you read it before?",
          "suggestions": ["No, what's it about?",
                          "Yes, I have"]},
         {"text": "I think '{book}' would be good for that. In fact, I read it last year. Have you read it before?",
          "suggestions": ["No, what's it about?",
                          "Yes, I have"]},
-        {"text": "Oh, we just read '{book}' the other week in the club. Have you read it before?",
+        {"text": "Oh, we just read '{book}' the other week in the warm-blooded booky club. Have you read it before?",
          "suggestions": ["No, what's it about?",
                          "Yes, I have"]},
         {"text": "'{book}' is a real page-turner, even though it's difficult to turn pages with little arms like mine. Have you read it before?",
@@ -51,25 +54,32 @@ inform = {
         {"text": "You might want to look at '{book}', it's a real hit among the stegosauruses.",
          "suggestions": ["No, what's it about?",
                          "Yes, I have"]},
+        {"text": "Check out '{book}', I bought it at the woolly minded mammoth bookstore.",
+         "suggestions": ["No, what's it about?",
+                         "Yes, I have"]},
+        {"text": "Loquacious Lambeosaurus! In that case, check out '{book}',
+         "suggestions": ["No, what's it about?",
+                         "Yes, I have"]},
         {"text": "For that, others I've talked to have really liked '{book}'. Have you heard of it?",
          "suggestions": ["No, what's it about?",
                          "Yes, I have"]},
     ],
     # failure
     "none_found_by_author": [
-        {"text": "I can't seem to think of any books written by {author}. Is there someone else you're interested in?",
+        {"text": "Grr... I can't seem to think of any books written by {author}. Is there someone else you're interested in?",
 "suggestions": []}
     ],
     "none_found_by_genre": [
-        {"text": "{genre}... Unfortunately, that's a genre I'm still ignorant of. Is there another you like?",
-"suggestions": []}
+        {"text": "{genre}... Grr... that's a genre I'm still ignorant of. Is there another you like?",
+"suggestions": ["fiction",
+                         "Science Fiction", "Mystery", "Romance", "Crime"]}
     ],
     "book_list_exhausted": [
-        {"text": "That's just about all the books I know about in this area. Maybe there's another genre or author you like?",
-"suggestions": []}
+        {"text": "That's just about all the books I know about in this area. Grr... Maybe there's another genre or author you like?",
+"suggestions": ["Romance", "Biography", "J.K. Rowling", "Harper Lee"]}
     ],
     "no_generating_entities": [
         {"text": "I don't quite understand what kind of book you're interested in. Is there a genre or author you like?",
-         "suggestions": []}
+         "suggestions": ["Crime", "Fantasy", "Stephen King", "Virginia Woolf"]}
     ]
 }
