@@ -2,6 +2,7 @@ import os
 import logging
 from datetime import datetime
 import pprint
+import traceback
 
 from wit import Wit
 from flask_socketio import Namespace, emit
@@ -56,10 +57,11 @@ class WitManager(Namespace):
                         and not filename.startswith('.')]
 
         for fname in filenames:
+            handler_name = fname[:-3]
             handler_module = import_python_file(basedir + os.sep + fname)
-            handler_class = getattr(handler_module, snake2title(fname[:-3]))
+            handler_class = getattr(handler_module, snake2title(handler_name))
 
-            self._handlers[fname] = handler_class()
+            self._handlers[handler_name] = handler_class()
 
         logging.debug('Loaded wit handlers: {}'.format(str(self._handlers)))
 
@@ -73,6 +75,7 @@ class WitManager(Namespace):
         except KeyError as e:
             logging.debug('''Either the response from Wit didn't have an intent,
 or there was no handler for the intent.''')
+            logging.debug(traceback.format_exc())
 
         if cfg.debug:
             return self._handlers['echo']
