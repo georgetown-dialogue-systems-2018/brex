@@ -1,6 +1,6 @@
 import logging
 
-import brex.config as config
+import brex.config as cfg
 from brex.handlers.handler import Handler
 import brex.goodreads as gr
 from brex.template_renderer import TemplateRenderer
@@ -118,18 +118,18 @@ class Inform(Handler):
             author = system_intent['author']
             return self._renderer.render('none_found_by_author',
                                          {'author': author},
-                                         strategy=config.template_selection_strategy)
+                                         strategy=cfg.template_selection_strategy)
         elif reason == 'none_found_by_genre':
             genre = system_intent['genre']
             return self._renderer.render('none_found_by_genre',
                                          {'genre': genre},
-                                         strategy=config.template_selection_strategy)
+                                         strategy=cfg.template_selection_strategy)
         elif reason == 'book_list_exhausted':
             return self._renderer.render('book_list_exhausted',
-                                         strategy=config.template_selection_strategy)
+                                         strategy=cfg.template_selection_strategy)
         elif reason == 'no_generating_entities':
             return self._renderer.render('no_generating_entities',
-                                         strategy=config.template_selection_strategy)
+                                         strategy=cfg.template_selection_strategy)
         else:
             raise Exception('Tried to generate text for unknown failure "{}"'.format(reason))
 
@@ -138,7 +138,7 @@ class Inform(Handler):
         book = '<a href="https://www.goodreads.com/book/show/' + book.gid + '">' + book.title + '</a>'
         return self._renderer.render('book',
                                      {'book': book},
-                                     strategy=config.template_selection_strategy)
+                                     strategy=cfg.template_selection_strategy)
 
     # response generation functions
     def _generate_response(self, context, wit_response, system_intent):
