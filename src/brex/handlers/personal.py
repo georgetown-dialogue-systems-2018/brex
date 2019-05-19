@@ -30,7 +30,7 @@ class Personal(Handler):
         return s
 
     def _handle_reality(self, context, wit_response):
-        s = "Am I a real dinosaur? How rude. Well, are you a real human? Why don't you prove it to me? I live with my dad, and yes, I am a real dinosaur. Dad made me a standing desk so I can chat with nice humans like you. I used to talk to all the other dinosaurs about the books we were reading before our program ended, and since that happened, it's hard to meet people where we live."
+        s = "Yes, I am a real dinosaur! I live with my dad, and he made me a standing desk so I can chat with nice humans like you. I used to talk to all the other dinosaurs about the books we were reading before our program ended, and since that happened, it's hard to meet people where we live."
         return s
 
     def _handle_age(self, context, wit_response):
