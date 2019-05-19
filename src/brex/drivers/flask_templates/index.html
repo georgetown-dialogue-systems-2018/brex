@@ -92,22 +92,22 @@
              color: white;
          }
 
-		 #suggestion-container {
-			 text-align: center;
-		 }
-		 .message-suggestion {
-			 display: inline-block;
-			 border: 1px solid #0084ff;
-			 background-color: white;
-			 color: #0084ff;
-			 margin: 0.5em;
-			 cursor: pointer;
-		 }
-		 .message-suggestion:hover {
-			 color: white;
-			 background-color: #0084ff;
-			 border: 1px solid white;
-		 }
+         #suggestion-container {
+             text-align: center;
+         }
+         .message-suggestion {
+             display: inline-block;
+             border: 1px solid #0084ff;
+             background-color: white;
+             color: #0084ff;
+             margin: 0.5em;
+             cursor: pointer;
+         }
+         .message-suggestion:hover {
+             color: white;
+             background-color: #0084ff;
+             border: 1px solid white;
+         }
 
          @media only screen and (max-width: 800px) {
              #messages {
@@ -127,7 +127,7 @@
         <script>
 
          (function() {
-			 var socket;
+             var socket;
 
              function addBrexMessage(text) {
                  $('#messages').append(
@@ -137,11 +137,11 @@
 
              function addSuggestions(suggestions) {
                  function makeSuggestion(suggestion) {
-					 var div = $('<div class="message message-suggestion">' + suggestion + '</div>')
-					 div.click(function() {
-						 $("#suggestion-container").remove();
-						 sendUserMessage(suggestion);
-					 });
+                     var div = $('<div class="message message-suggestion">' + suggestion + '</div>')
+                     div.click(function() {
+                         $("#suggestion-container").remove();
+                         sendUserMessage(suggestion);
+                     });
                      return div;
                  }
 
@@ -156,17 +156,18 @@
              function addUserMessage(text) {
                  var elt = '<div class="message-container message-container-user"><span class="message message-user">' + text + '</span></div>';
                  $('#messages').append($(elt));
+                 $("#suggestion-container").remove();
                  scrollDown();
              }
 
-			 function sendUserMessage(message) {
+             function sendUserMessage(message) {
                  if (message) {
                      socket.emit('user_message', {message: message});
                      addUserMessage(message);
                      scrollDown();
                  }
                  $('#submit-button').attr('disabled', 'disabled');
-			 }
+             }
 
              function scrollDown() {
                  var div = document.getElementById('messages');
@@ -191,9 +192,9 @@
 
                  $('#input').on('submit', function(e) {
                      e.preventDefault();
-					 var textbox = $('#textbox');
-					 var message = textbox.val();
-					 sendUserMessage(message);
+                     var textbox = $('#textbox');
+                     var message = textbox.val();
+                     sendUserMessage(message);
                      textbox.val('').focus();
                      if (nothingSaidTimeout) {
                          clearTimeout(nothingSaidTimeout);
@@ -205,6 +206,7 @@
 
                  var nothingSaidTimeout = setTimeout(function() {
                      addBrexMessage('<img src="static/brex.jpg" style="width:70%;"></img><br><br>Hi, I\'m B. Rex! Would you like to hear a little bit about my story, or would you like a book recommendation? Tell me about your favorite genre or author.');
+                     addSuggestions(['I want a fantasy novel', 'I like Stephen King']);
                  }, 1500);
 
              });
