@@ -1,5 +1,6 @@
 import logging
 
+import brex.config as config
 from brex.handlers.handler import Handler
 import brex.goodreads as gr
 from brex.template_renderer import TemplateRenderer
@@ -115,21 +116,29 @@ class Inform(Handler):
         reason = system_intent['failure']
         if reason == 'none_found_by_author':
             author = system_intent['author']
-            return self._renderer.render('none_found_by_author', {'author': author})
+            return self._renderer.render('none_found_by_author',
+                                         {'author': author},
+                                         strategy=config.template_seleciton_strategy)
         elif reason == 'none_found_by_genre':
             genre = system_intent['genre']
-            return self._renderer.render('none_found_by_genre', {'genre': genre})
+            return self._renderer.render('none_found_by_genre',
+                                         {'genre': genre},
+                                         strategy=config.template_seleciton_strategy)
         elif reason == 'book_list_exhausted':
-            return self._renderer.render('book_list_exhausted')
+            return self._renderer.render('book_list_exhausted',
+                                         strategy=config.template_seleciton_strategy)
         elif reason == 'no_generating_entities':
-            return self._renderer.render('no_generating_entities')
+            return self._renderer.render('no_generating_entities',
+                                         strategy=config.template_seleciton_strategy)
         else:
             raise Exception('Tried to generate text for unknown failure "{}"'.format(reason))
 
     def _generate_book_response(self, context, wit_response, system_intent):
         book = context['current_book']
         book = '<a href="https://www.goodreads.com/book/show/' + book.gid + '">' + book.title + '</a>'
-        return self._renderer.render('book', {'book': book})
+        return self._renderer.render('book',
+                                     {'book': book},
+                                     strategy=config.template_seleciton_strategy)
 
     # response generation functions
     def _generate_response(self, context, wit_response, system_intent):

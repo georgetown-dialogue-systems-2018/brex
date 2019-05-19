@@ -18,6 +18,9 @@ summarization_max_chars = 500
 
 #### flask
 # flask_secret should be a long stream of random bytes--see: http://flask.pocoo.org/docs/1.0/config/
-flask_secret = '' 
+flask_secret = ''
 flask_host = "127.0.0.1" # set to 0.0.0.0 to make accessible to other machines
 flask_port = 5000
+
+# how to select string templates for NLU
+template_selection_strategy = "linear" # "linear" or "random"

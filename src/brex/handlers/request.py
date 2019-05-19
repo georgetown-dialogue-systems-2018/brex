@@ -102,18 +102,24 @@ class Request(Handler):
         if 'failure' in system_intent:
             reason = system_intent['failure']
             if reason == 'no_current_book':
-                return self._renderer.render('no_current_book')
+                return self._renderer.render('no_current_book',
+                                             strategy=cfg.template_selection_strategy)
             if reason == 'no_reviews':
-                return self._renderer.render('no_reviews')
+                return self._renderer.render('no_reviews',
+                                             strategy=cfg.template_selection_strategy)
             else:
                 raise Exception('Tried to generate text for unknown failure "{}"'.format(reason))
         elif 'title' in system_intent:
             title = system_intent['title']
-            return self._renderer.render('title', {'title': title})
+            return self._renderer.render('title',
+                                         {'title': title},
+                                         strategy=cfg.template_selection_strategy)
         elif 'author' in system_intent:
             authors = system_intent['author']
             author = authors[0]
-            return self._renderer.render('author', {'author': author})
+            return self._renderer.render('author',
+                                         {'author': author},
+                                         strategy=cfg.template_selection_strategy)
         elif 'summary' in system_intent:
             summary = system_intent['summary']
             friend = self._generate_friend_name()
@@ -121,7 +127,9 @@ class Request(Handler):
                                                      'friend': friend})
         elif 'rating' in system_intent:
             rating = system_intent['rating']
-            return self._renderer.render('rating', {'rating': rating})
+            return self._renderer.render('rating',
+                                         {'rating': rating},
+                                         strategy=cfg.template_selection_strategy)
         else:
             raise Exception('Tried to generate text for some unknown entity. System intent: {}'.format(system_intent))
 

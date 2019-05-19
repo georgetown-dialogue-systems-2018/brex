@@ -11,6 +11,7 @@ class TemplateRenderer():
             os.sep.join(['brex', 'templates', filename + '.py']))
 
         self._data = getattr(pyfile, filename)
+        self._linear_counter = 0
 
     def render(self, kind, keywords={}, strategy="random"):
         keys = kind.split(".")
@@ -18,7 +19,11 @@ class TemplateRenderer():
 
         if strategy == "random":
             template = choice(templates)
-            template['text'] = template['text'].format(**keywords)
-            return template
+        elif strategy == "linear":
+            template = templates[self._linear_counter % len(templates)]
+            self._linear_counter += 1
         else:
             raise Exception("Unknown strategy '{}'".format(strategy))
+
+        template['text'] = template['text'].format(**keywords)
+        return template
