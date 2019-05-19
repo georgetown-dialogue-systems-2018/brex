@@ -57,7 +57,7 @@ inform = {
         {"text": "Check out '{book}', I bought it at the woolly minded mammoth bookstore.",
          "suggestions": ["No, what's it about?",
                          "Yes, I have"]},
-        {"text": "Loquacious Lambeosaurus! In that case, check out '{book}',
+        {"text": "Loquacious Lambeosaurus! In that case, check out '{book}'",
          "suggestions": ["No, what's it about?",
                          "Yes, I have"]},
         {"text": "For that, others I've talked to have really liked '{book}'. Have you heard of it?",
