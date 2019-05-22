@@ -1,4 +1,5 @@
 import types
+import logging
 import collections
 from goodreads import client
 from diskcache import FanoutCache
@@ -47,7 +48,9 @@ def book(book_id=None, isbn=None):
 
 @CACHE.memoize(expire=86400)
 def search_books(q, page=1, search_field='all'):
-    return CLIENT.search_books(q, page=page, search_field=search_field)
+    results = CLIENT.search_books(q, page=page, search_field=search_field)
+    logging.debug("search_books returning: %s", results)
+    return results
 
 @CACHE.memoize(expire=86400)
 def reviews(book_id):
@@ -64,5 +67,3 @@ def reviews(book_id):
         full_reviews.append(full_review)
 
     return [review.text_content() for review in full_reviews]
-
-
