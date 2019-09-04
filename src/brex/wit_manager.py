@@ -1,11 +1,9 @@
 import os
 import logging
 from datetime import datetime
-import pprint
 import traceback
 
 from wit import Wit
-from flask_socketio import Namespace, emit
 import brex.config as cfg
 from brex.common import import_python_file
 
@@ -13,13 +11,8 @@ from brex.common import import_python_file
 def snake2title(s):
     return "".join([w.capitalize() for w in s.split('_')])
 
-class WitManager(Namespace):
-    def __init__(self, namespace='/'):
-        # Namespace is a superclass we need to inherit from for socket.io
-        # Come to think of it, this should probably be living in the driver
-        # instead of the manager...
-        super().__init__(namespace)
-
+class WitManager:
+    def __init__(self):
         # Wit is a wrapper for the wit.ai HTTP API
         self._wit_client = Wit(cfg.wit_access_token)
 
@@ -108,7 +101,7 @@ or there was no handler for the intent.''')
         return handler_response
 
 
-    def _log_convo(self):
+    def log_convo(self):
         logdir = cfg.convo_logging_dir
         if logdir:
             if not os.path.exists(logdir):
@@ -125,29 +118,3 @@ or there was no handler for the intent.''')
                     lines.append("User:\t" + pair['wit']['_text'])
                     lines.append("Brex:\t" + pair['handler']['text'])
                 f.write("\n".join(lines) + "\n")
-
-    # Flask SocketIO methods
-    def on_connect(self):
-        pass
-
-    def on_disconnect(self):
-        self._log_convo()
-
-    def on_user_message(self, data):
-        message = data['message']
-
-        try:
-            response = self.respond(message)
-        except Exception as e:
-            logging.error("Encountered an error while attempting to respond.")
-            logging.error(traceback.format_exc())
-            response = {'text': 'Sorry, I think I dozed off--what was that?'}
-        should_exit = response['exit'] if 'exit' in response else False
-        socket_data = {'message': response['text'],
-                       'suggestions': response['suggestions'] if 'suggestions' in response else None,
-                       'exit': should_exit}
-        emit('brex_message', socket_data)
-
-        if should_exit:
-            self._log_convo()
-            self.reset()
