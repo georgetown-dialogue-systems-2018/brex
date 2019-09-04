@@ -17,6 +17,8 @@ cd src/
 python3 main.py
 ```
 
+Navigate to `localhost:5000` if `mode = flask`. You should see a chat window.
+
 # Configuration variables
 
 | variable                     | values              | description                                                                                 |
@@ -33,4 +35,4 @@ python3 main.py
 | flask_secret                 | str                 | A randomly generated string with high entropy. See: http://flask.pocoo.org/docs/1.0/config/ |
 | flask_host                   | str                 | IP address to bind the Flask app to. 127.0.0.1 for localhost, 0.0.0.0 for the world.        |
 | flask_port                   | int                 | Port to bind the Flask app to.                                                              |
-| template_selection_strategy  | 'linear', 'random'  | How to select a string template for NLU.                                                    |
+| template_selection_strategy  | 'linear', 'random'  | How to select a string template for NLG.                                                    |
