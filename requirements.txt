@@ -12,3 +12,4 @@ sumy
 cssselect
 lxml
 names
+numpy
