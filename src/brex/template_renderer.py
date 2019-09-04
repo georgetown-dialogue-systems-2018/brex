@@ -1,6 +1,7 @@
 from random import choice
 from functools import reduce
 from operator import getitem
+from copy import deepcopy
 import os
 
 from brex.common import import_python_file
@@ -18,9 +19,9 @@ class TemplateRenderer():
         templates = reduce(getitem, keys, self._data)
 
         if strategy == "random":
-            template = choice(templates)
+            template = deepcopy(choice(templates))
         elif strategy == "linear":
-            template = templates[self._linear_counter % len(templates)]
+            template = deepcopy(templates[self._linear_counter % len(templates)])
             self._linear_counter += 1
         else:
             raise Exception("Unknown strategy '{}'".format(strategy))
