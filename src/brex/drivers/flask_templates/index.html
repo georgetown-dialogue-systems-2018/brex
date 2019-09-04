@@ -190,6 +190,11 @@
                      }, Math.random() * 1200 + 300);
                  });
 
+                 socket.on('disconnect', function(data) {
+                    addBrexMessage("I've got to go, I'll talk to you soon!");
+                    $('#submit-button').attr('disabled', 'disabled');
+                 });
+
                  $('#input').on('submit', function(e) {
                      e.preventDefault();
                      var textbox = $('#textbox');

@@ -14,7 +14,7 @@ class FlaskDriver(Driver):
     def run(self):
         app = Flask(__name__, template_folder='flask_templates')
         app.config['SECRET_KEY'] = cfg.flask_secret
-        socketio = SocketIO(app)
+        socketio = SocketIO(app, ping_timeout=300)
 
         @app.route('/')
         def index():
