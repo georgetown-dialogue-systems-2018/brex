@@ -4,6 +4,7 @@ import brex.config as cfg
 from brex.handlers.handler import Handler
 import brex.goodreads as gr
 from brex.template_renderer import TemplateRenderer
+import brex.templates.inform as inform_templates
 
 filtering_entities = ['']
 generating_entities = ['author', 'genre']
@@ -135,10 +136,12 @@ class Inform(Handler):
 
     def _generate_book_response(self, context, wit_response, system_intent):
         book = context['current_book']
+        gid = int(book.gid)
         book = '<a href="https://www.goodreads.com/book/show/' + book.gid + '">' + book.title + '</a>'
-        return self._renderer.render('book',
-                                     {'book': book},
-                                     strategy=cfg.template_selection_strategy)
+        response = self._renderer.render('book', {'book': book}, strategy=cfg.template_selection_strategy)
+        if gid in inform_templates.flavor:
+            response['text'] += " " + inform_templates.flavor[gid]
+        return response
 
     # response generation functions
     def _generate_response(self, context, wit_response, system_intent):
