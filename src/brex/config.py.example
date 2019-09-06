@@ -15,6 +15,7 @@ wit_access_token = ''
 summarization_language = "english"
 summarization_sentence_count = 5
 summarization_max_chars = 500
+summarization_min_chars = 100
 
 #### flask
 # flask_secret should be a long stream of random bytes--see: http://flask.pocoo.org/docs/1.0/config/

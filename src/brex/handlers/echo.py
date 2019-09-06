@@ -14,7 +14,7 @@ class Echo(Handler):
             logging.error("No handler found for this intent! Echoing the JSON back at you:")
             output['text'] = str(wit_response)
         else:
-            output['text'] = str(wit_response['_text'])
+            output['text'] = 'Sorry, I don\'t quite understand. Could you say that again?'
         output['exit'] = False
 
         return output

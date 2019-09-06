@@ -53,6 +53,16 @@ class Request(Handler):
 
         # begin with the whole review
         summary = self._reviews[0]
+
+        # make sure it's long enough
+        i = 0
+        while len(summary) < getattr(cfg, "summarization_min_chars", 100):
+            i += 1
+            if i == len(self._reviews):
+                return {'failure': 'no_reviews'}
+            else:
+                summary = self._reviews[i]
+
         logging.debug("Found a review with {} chars...".format(len(summary)))
 
         # attempt to summarize if it's too long
