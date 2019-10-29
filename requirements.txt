@@ -5,7 +5,7 @@ bs4
 toml
 flask
 flask-socketio
-python-engineio==3.0
+python-engineio==3.8.2.post1
 gevent==1.4.0
 requests
 sumy
